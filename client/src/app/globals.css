@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-style: inter;
+}
+
+.text-border {
+  color: transparent;
+  -webkit-text-stroke: 1px white; /* Adjust the width and color as needed */
+  stroke: 0.25px white;
+}
+
+@media (width<= 480px) {
+  #hero-title1 {
+    font-size: 4.85rem;
+  }
+  #hero-title2 {
+    font-size: 1.75rem;
+  }
+  #search {
+    width: 95%;
+  }
+  #viewMore {
+    font-size: 0.75rem;
+  }
+  #mini-header {
+    font-size: 1.55rem;
+  }
+  /* #tourist {
+    width: 8rem;
+  } */
+}
+/* @media (width<= 450px) {
+  #tourist {
+    width: 6rem;
+  }
+} */
