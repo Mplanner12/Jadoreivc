@@ -9,6 +9,7 @@ import { RiCheckboxBlankLine } from "react-icons/ri";
 import Link from "next/link";
 import DateRangePicker from "../Components/DateRangePicker";
 import TimePicker from "../Components/TimePicker";
+import { UserProvider } from "../context/UserContex";
 
 interface tourProps {
   onLocalsSelect: (selectedLocal: string) => void;
@@ -94,8 +95,9 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
   }, []);
 
   return (
+    // <UserProvider>
     <main className="m-0 p-0 flex flex-col justify-center items-center">
-      <Header />
+      {/* <Header /> */}
       <div className="h-full w-full">
         <img
           className="h-[20rem] md:h-[25rem] w-full"
@@ -230,8 +232,9 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </main>
+    // </UserProvider>
   );
 };
 

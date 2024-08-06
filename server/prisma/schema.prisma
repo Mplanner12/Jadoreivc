@@ -16,7 +16,7 @@ generator client {
 model User {
   id        String     @id @default(uuid()) @map("_id")
   fullName  String
-  address   String
+  address   String?
   email     String     @unique
   password  String
   userType  UserType
@@ -27,18 +27,23 @@ model User {
   tourGuide TourGuide?
   reviews   Review[]   @relation("touristReviews")
   tourPlans TourPlan[]
+  PlanTour  PlanTour[]
 }
 
 model TourGuide {
-  id         String   @id @default(uuid()) @map("_id")
-  userId     String   @unique
-  location   String?
-  offerRange Int?
-  aboutMe    String?
-  motto      String?
-  thingsToDo String[]
-  user       User     @relation(fields: [userId], references: [id])
-  reviews    Review[] @relation("guideReviews")
+  id             String   @id @default(uuid()) @map("_id")
+  userId         String   @unique
+  location       String?
+  offerRange     Int?
+  aboutMe        String?
+  motto          String?
+  thingsToDo     String[]
+  summary        String?
+  tourHighlights String[]
+  user           User     @relation(fields: [userId], references: [id])
+  reviews        Review[] @relation("guideReviews")
+  rating         String?
+  // PlanTour       PlanTour[]
 }
 
 model Review {
@@ -63,6 +68,24 @@ model TourPlan {
   guidePreference GuidePreference
   tourist         User            @relation(fields: [touristId], references: [id])
   createdAt       DateTime        @default(now())
+}
+
+model PlanTour {
+  id             String   @id @default(uuid()) @map("_id")
+  userId         String
+  // tourGuideId    String
+  location       String
+  startDate      DateTime
+  endDate        DateTime
+  time           String
+  numberOfPeople Int
+  localGuide     String[]
+  noOfDays       String
+  user           User?    @relation(fields: [userId], references: [id])
+  // tourGuide      TourGuide @relation(fields: [tourGuideId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum UserType {

@@ -3,11 +3,13 @@ import React from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { MdOutlineMail } from "react-icons/md";
+import { UserProvider } from "../context/UserContex";
 
 const Page = () => {
   return (
+    // <UserProvider>
     <main className="m-0 p-0 flex flex-col justify-center items-center">
-      <Header />
+      {/* <Header /> */}
       <div className="h-full w-full flex flex-col justify-center items-center">
         <div className="w-full flex py-[2.85rem] pb-[0rem] justify-center items-center px-[1rem]">
           <h1 className="text-[2.1rem] font-semibold text-teal-900">
@@ -104,8 +106,9 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </main>
+    // </UserProvider>
   );
 };
 

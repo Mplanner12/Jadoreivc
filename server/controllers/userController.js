@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 exports.registerUser = async (req, res) => {
   try {
-    const { fullName, address, email, password, userType } = req.body;
+    const { fullName, email, password, userType } = req.body;
 
     // Check if the user already exists
     const existingUser = await prisma.user.findUnique({
@@ -24,7 +24,7 @@ exports.registerUser = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         fullName,
-        address,
+        // address,
         email,
         password: hashedPassword,
         userType,
@@ -48,7 +48,7 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, userType } = req.body;
 
     // Check if the user exists
     const user = await prisma.user.findUnique({
@@ -61,9 +61,19 @@ exports.loginUser = async (req, res) => {
 
     // Check if the password is correct
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Check if the userType matches and if the user has updated their profile to be a tour guide
+    if (
+      userType === "TOUR_GUIDE" &&
+      !(await prisma.tourGuide.findUnique({ where: { userId: user.id } }))
+    ) {
+      return res.status(401).json({
+        message:
+          "You haven't updated your profile to login as a tour guide. Note that every user is a Tourist, but not all tourists are tour Guides.",
+      });
     }
 
     cookieToken(user, res);

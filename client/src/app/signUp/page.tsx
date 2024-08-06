@@ -1,24 +1,47 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect, use } from "react";
 import { LuEyeOff, LuEye } from "react-icons/lu";
 import { useForm } from "react-hook-form";
-import { useUser } from "../context/UserContext";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import axiosInstance from "@/src/lib/utils";
 
 const Page = () => {
   const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [user, setUser] = useState(null);
+  const [selectedRole, setSelectedRole] = useState<string | null>("TOURIST"); // For conditional rendering
+  const [userType, setUserType] = useState<string | null>("TOURIST"); // For react-hook-form
   const [showPassword, setShowPassword] = useState(false);
+
+  // Register Function
+  const registerUser = async (userDetails: any) => {
+    try {
+      const { data } = await axiosInstance.post(
+        "/api/users/auth/register",
+        userDetails
+      );
+      if (data.success === true) {
+        setUser(data.user);
+        router.push("/");
+      }
+    } catch (error) {
+      alert("Registration failed");
+      console.error("Registration failed", error);
+    }
+  };
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-  const { register: registerUser } = useUser();
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRole(event.target.id);
+    setUserType(event.target.value); // Update the value for react-hook-form
+    register("userType", {
+      required: true,
+      value: userType, // Use roleValue for registration
+    });
   };
 
   const togglePasswordVisibility = () => {
@@ -27,9 +50,9 @@ const Page = () => {
 
   const onSubmit = async (data: any) => {
     try {
+      console.log(data);
       await registerUser(data);
       router.push("/");
-      console.log(data);
     } catch (error) {
       console.error("Registration failed", error);
     }
@@ -58,12 +81,12 @@ const Page = () => {
                 <input
                   style={{ transform: "scale(1.5)" }}
                   type="radio"
-                  name="role"
-                  id="tourist"
+                  id="TOURIST"
                   className={`w-fit mr-1 p-0${
-                    selectedRole === "tourist" ? "border-emerald-600" : ""
+                    selectedRole === "TOURIST" ? "border-emerald-600" : ""
                   }`}
-                  checked={selectedRole === "tourist"}
+                  checked={selectedRole === "TOURIST"}
+                  value="TOURIST"
                   onChange={handleRoleChange}
                 />
                 <label
@@ -77,13 +100,13 @@ const Page = () => {
                 <input
                   style={{ transform: "scale(1.5)" }}
                   type="radio"
-                  name="role"
-                  id="guide"
+                  id="TOUR_GUIDE"
                   className={`w-fit mr-1 ${
-                    selectedRole === "guide" ? "bg-emerald-600" : ""
+                    selectedRole === "TOUR_GUIDE" ? "bg-emerald-600" : ""
                   }`}
-                  checked={selectedRole === "guide"}
+                  checked={selectedRole === "TOUR_GUIDE"}
                   onChange={handleRoleChange}
+                  value="TOUR_GUIDE"
                 />
                 <label
                   htmlFor="guide"

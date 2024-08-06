@@ -1,26 +1,47 @@
 "use client";
-
 import Link from "next/link";
 import React, { useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { useForm } from "react-hook-form"; // Import React Hook Form
-import { useUser } from "../context/UserContext";
-import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import axiosInstance from "@/src/lib/utils";
 
 const Page = () => {
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<string | null>("TOURIST");
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useUser();
+  const [user, setUser] = useState(null);
+  const [userType, setUserType] = useState<string | null>("TOURIST"); // For react-hook-form
+
+  const login = async (email: string, password: string, userType: string) => {
+    try {
+      const { data } = await axiosInstance.post("/api/users/auth/login", {
+        email,
+        password,
+      });
+      if (data.success === true) {
+        setUser((user) => data.user);
+        router.push("/");
+      }
+    } catch (error) {
+      alert("Login failed");
+      console.error("Login failed", error);
+    }
+  };
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm(); // Initialize React Hook Form
+  } = useForm();
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRole(event.target.id);
+    setUserType(event.target.value); // Update the value for react-hook-form
+    register("userType", {
+      required: true,
+      value: userType, // Use roleValue for registration
+    });
   };
 
   const togglePasswordVisibility = () => {
@@ -29,9 +50,8 @@ const Page = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      const response = await login(data.email, data.password);
-      router.push("/");
-      console.log(response);
+      login(data.email, data.password, data.userType);
+      console.log(data);
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -60,12 +80,12 @@ const Page = () => {
                 <input
                   style={{ transform: "scale(1.5)" }}
                   type="radio"
-                  name="role"
-                  id="tourist"
-                  className={`w-fit mr-1 ${
-                    selectedRole === "tourist" ? "bg-emerald-600" : ""
+                  id="TOURIST"
+                  className={`w-fit mr-1 p-0${
+                    selectedRole === "TOURIST" ? "border-emerald-600" : ""
                   }`}
-                  checked={selectedRole === "tourist"}
+                  checked={selectedRole === "TOURIST"}
+                  value="TOURIST"
                   onChange={handleRoleChange}
                 />
                 <label
@@ -79,13 +99,13 @@ const Page = () => {
                 <input
                   style={{ transform: "scale(1.5)" }}
                   type="radio"
-                  name="role"
-                  id="guide"
+                  id="TOUR_GUIDE"
                   className={`w-fit mr-1 ${
-                    selectedRole === "guide" ? "bg-emerald-600" : ""
+                    selectedRole === "TOUR_GUIDE" ? "bg-emerald-600" : ""
                   }`}
-                  checked={selectedRole === "guide"}
+                  checked={selectedRole === "TOUR_GUIDE"}
                   onChange={handleRoleChange}
+                  value="TOUR_GUIDE"
                 />
                 <label
                   htmlFor="guide"
@@ -144,16 +164,18 @@ const Page = () => {
                     {`${errors.password.message}`}
                   </p>
                 )}
-                <span
-                  className="relative top-[-1.5rem] flex justify-end w-full h-full right-4 -translate-y-1/2 cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                >
-                  {showPassword ? (
-                    <LuEye size={32} className="h-6 w-6 text-gray-500" />
-                  ) : (
-                    <LuEyeOff size={32} className="h-6 w-6 text-gray-500" />
-                  )}
-                </span>
+                <div className="w-full">
+                  <span
+                    className="relative top-[-1.5rem] flex justify-end w-full h-full right-4 -translate-y-1/2 cursor-pointer"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <LuEye size={32} className="h-6 w-6 text-gray-500" />
+                    ) : (
+                      <LuEyeOff size={32} className="h-6 w-6 text-gray-500" />
+                    )}
+                  </span>
+                </div>
               </div>
               <div className={`w-full h-full mt-[1.2rem]`}>
                 <input

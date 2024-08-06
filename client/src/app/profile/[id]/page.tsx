@@ -9,6 +9,7 @@ import { BsCamera } from "react-icons/bs";
 import { ImCheckboxUnchecked } from "react-icons/im";
 import { FaXmark, FaCheck, FaStar } from "react-icons/fa6";
 import { HiOutlineLocationMarker } from "react-icons/hi";
+import { UserProvider } from "../../context/UserContex";
 
 const Page = () => {
   const [selectedLocals, setSelectedLocals] = useState<string[]>([]);
@@ -124,8 +125,9 @@ const Page = () => {
   };
 
   return (
+    // <UserProvider>
     <main className="w-full m-0 p-0 flex flex-col justify-center items-center">
-      <Header />
+      {/* <Header /> */}
       <div className="w-full flex flex-col justify-center items-center pt-[2rem]">
         <div className="flex flex-col justify-center items-center py-[2rem]">
           <h1 className="text-center text-[1.85rem] font-semibold text-teal-950">
@@ -408,8 +410,9 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </main>
+    // </UserProvider>
   );
 };
 

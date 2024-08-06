@@ -82,7 +82,7 @@ const RecentBookings = () => {
         <div className="md:gap-x-4 w-full flex flex-col justify-center md:grid md:grid-cols-3 items-center">
           {Bookings.map((booking, index) => (
             <div
-              key={booking.image}
+              key={index}
               className="mt-[1.75rem] md:mb-[2.75rem] flex flex-col justify-center"
             >
               <div className="absolute -mt-[23.5rem] md:-mt-[24.25rem] ml-[1.25rem] z-20 w-fit p-[0.65rem] px-[1.15rem] bg-white rounded-full text-emerald-600">

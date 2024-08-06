@@ -1,9 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
+"use client";
 import React from "react";
 import { FaStar } from "react-icons/fa6";
 import { CiStar } from "react-icons/ci";
 import Link from "next/link";
 import { HiOutlineLocationMarker } from "react-icons/hi";
+import { TourGuideContext } from "../context/tourGuideContext";
+import { useContext } from "react";
+import { useRouter } from "next/router";
 
 interface FeaturedGuidesProps {
   guideCount: number; // Add a prop to control the number of guides
@@ -120,7 +124,12 @@ const FeaturedGuides = ({ guideCount }: FeaturedGuidesProps) => {
       languages: ["French", "English"],
     },
   ];
-  const guidesToDisplay = GuideInfo.slice(0, guideCount);
+
+  const { tourGuides, loading } = useContext(TourGuideContext);
+
+  const guidesToDisplay = tourGuides?.slice(0, guideCount);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="px-[1rem] py-[2rem] md:px-[4rem] pt-[1rem] md:pt-[2rem] pb-[1rem] w-full flex flex-col justify-center mb-[4rem] md:mb-[4.5rem]">
@@ -144,8 +153,12 @@ const FeaturedGuides = ({ guideCount }: FeaturedGuidesProps) => {
       </div>
       <div className="block">
         <div className="md:gap-x-6 md:h-fit w-full h-fit flex flex-col justify-center md:grid md:grid-cols-4 items-center ">
-          {guidesToDisplay.map((guide) => (
-            <Link href={"/tourguides/tourOverview"} key={guide.image}>
+          {guidesToDisplay?.map((guide: any, index: number) => (
+            <Link
+              // key={guide.image}
+              key={index}
+              href={`/tourguides/tourOverview/${guide.id}`}
+            >
               <div className="mt-[1.75rem] mb-[0.75rem] flex flex-col justify-center h-full">
                 <div className="mb-[0.85rem] w-full h-full">
                   <img
@@ -178,12 +191,15 @@ const FeaturedGuides = ({ guideCount }: FeaturedGuidesProps) => {
                       </div>
                     </div>
                     <div className="flex h-fit py-0.5 text-[0.7rem] justify-center items-center gap-x-[0.25rem]">
-                      <div className="text-teal-950">{guide.languages[0]}</div>
-                      {guide.languages.length > 1 && (
-                        <div className="text-teal-950 border-l-[1.5px] border-teal-700 pl-[0.25rem]">
-                          {guide?.languages[1]}
-                        </div>
-                      )}
+                      <div className="text-teal-950">
+                        {guide.languages != null && guide.languages[0]}
+                      </div>
+                      {guide.languages != null &&
+                        guide.languages.length > 1 && (
+                          <div className="text-teal-950 border-l-[1.5px] border-teal-700 pl-[0.25rem]">
+                            {guide?.languages[1]}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -206,88 +222,6 @@ const FeaturedGuides = ({ guideCount }: FeaturedGuidesProps) => {
           ))}
         </div>
       </div>
-      {/* <div className="md:hidden">
-        <div className="w-full flex flex-col justify-center items-center">
-          <div className="w-full mt-[1.75rem] flex flex-col justify-center">
-            <div className="w-full mb-[1.5rem]">
-              <div className="w-full flex justify-center items-center">
-                <img
-                  className="w-full rounded-xl"
-                  src="/smilingGirl.png"
-                  alt="image"
-                />
-              </div>
-              <div className="pb-[0.5rem] pt-[1.75rem] text-teal-950 tracking-wide">
-                <p className="text-[1.35rem] font-bold">Name</p>
-                <p className="text-[1.35rem] font-bold">Location</p>
-              </div>
-              <div className="w-full flex justify-between items-center">
-                <div className="flex justify-center w-fit gap-x-[0.35rem] md:gap-x-1">
-                  <FaStar color="green" size={12} />
-                  <FaStar color="green" size={12} />
-                  <FaStar color="green" size={12} />
-                  <FaStar color="green" size={12} />
-                  <CiStar size={13} />
-                </div>
-                <div className="relative">
-                  <p className="text-[1rem] font-semibold">4.8 ((243))</p>
-                </div>
-                <div className="justify-end text-[1rem] font-semibold">
-                  &quot;One quote from review&quot;
-                </div>
-              </div>
-            </div>
-            <div className="text-teal-950 md:gap-x-[12rem] md:w-fit flex justify-between pt-[1.5rem] border-t-[0.25px] border-black">
-              <p className="text-sm md:text-sm font-semibold">4 Reviews</p>
-              <p className="text-sm md:text-sm font-semibold">
-                From
-                <span className="text-sm text-emerald-600 text-[0.8rem] font-semibold px-[0.25rem]">
-                  $189.25
-                </span>
-              </p>
-            </div>
-          </div>
-          <div className="w-full mt-[1.75rem] flex flex-col justify-center">
-            <div className="w-full mb-[1.5rem]">
-              <div className="w-full flex justify-center items-center">
-                <img
-                  className="w-full rounded-xl"
-                  src="/smilingGirl.png"
-                  alt="image"
-                />
-              </div>
-              <div className="pb-[0.5rem] pt-[1.75rem] text-teal-950 tracking-wide">
-                <p className="text-[1.35rem] font-bold">Name</p>
-                <p className="text-[1.35rem] font-bold">Location</p>
-              </div>
-              <div className="w-full flex justify-between items-center">
-                <div className="flex justify-center w-fit gap-x-[0.35rem] md:gap-x-1">
-                  <FaStar color="green" size={12} />
-                  <FaStar color="green" size={12} />
-                  <FaStar color="green" size={12} />
-                  <FaStar color="green" size={12} />
-                  <CiStar size={13} />
-                </div>
-                <div className="relative">
-                  <p className="text-[1rem] font-semibold">4.8 ((243))</p>
-                </div>
-                <div className="justify-end text-[1rem] font-semibold">
-                  &quot;One quote from review&quot;
-                </div>
-              </div>
-            </div>
-            <div className="text-teal-950 md:gap-x-[12rem] md:w-fit flex justify-between pt-[1.5rem] border-t-[0.25px] border-black">
-              <p className="text-sm md:text-sm font-semibold">4 Reviews</p>
-              <p className="text-sm md:text-sm font-semibold">
-                From
-                <span className="text-sm text-emerald-600 text-[0.8rem] font-semibold px-[0.25rem]">
-                  $189.25
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

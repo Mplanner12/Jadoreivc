@@ -15,6 +15,14 @@ import { CarouselNext, CarouselPrevious } from "../../components/ui/carousel";
 import reviewImage from "../../../public/reviewImg.png";
 import { FaStar } from "react-icons/fa";
 
+interface Review {
+  // Define the structure of your review data here
+  // Example:
+  author: string;
+  rating: number;
+  comment: string;
+}
+
 const Reviews = [
   {
     text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
@@ -23,43 +31,8 @@ const Reviews = [
     width: 100,
     height: 100,
   },
-  {
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-    src: reviewImage,
-    alt: "Image",
-    width: 100,
-    height: 100,
-  },
-  {
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-    src: reviewImage,
-    alt: "Image",
-    width: 100,
-    height: 100,
-  },
-  {
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-    src: reviewImage,
-    alt: "Image",
-    width: 100,
-    height: 100,
-  },
-  {
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-    src: reviewImage,
-    alt: "Image",
-    width: 100,
-    height: 100,
-  },
-  {
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-    src: reviewImage,
-    alt: "Image",
-    width: 100,
-    height: 100,
-  },
 ];
-const ReviewsCarousel = () => {
+const ReviewsCarousel: React.FC<{ reviews: Review[] }> = ({ reviews }) => {
   const plugin = React.useRef<AutoplayType>(
     Autoplay({ delay: 2000, stopOnInteraction: true })
   );
@@ -78,7 +51,8 @@ const ReviewsCarousel = () => {
           <CarouselContent className="w-full h-full md:pb-[2rem] pt-[0.85rem] px-0 md:pr-[2rem] gap-x-[0.7rem]">
             {Reviews.map((review, index) => (
               <CarouselItem
-                key={review.alt}
+                // key={review.alt}
+                key={index}
                 className="w-fit md:w-full h-fit basis-[98%] md:basis-[27.5%] xl:basis-[27.5%] 2xl:basis-[24%]"
               >
                 <Card className="w-full px-[0rem] flex flex-col justify-center items-center p-[1rem] rounded-2xl border-emerald-600 border-[1px] shadow-sm">

@@ -12,6 +12,7 @@ import {
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import FeaturedGuides from "../Components/FeaturedGuides";
+import { UserProvider } from "../context/UserContex";
 
 const Buttons = [
   { text: "City Tours", href: "" },
@@ -24,8 +25,9 @@ const Buttons = [
 
 const page = () => {
   return (
+    // <UserProvider>
     <main className="w-full m-0 p-0 flex flex-col justify-center">
-      <Header />
+      {/* <Header /> */}
       <div className="h-full w-full">
         <img
           className="h-[20rem] md:h-[25rem] w-full"
@@ -41,7 +43,7 @@ const page = () => {
         </h1>
         <div className="md:hidden w-full">
           <Carousel className="w-full h-full py-[1.75rem]">
-            <CarouselContent className="w-full h-fit gap-x-[2.5rem]">
+            <CarouselContent className="w-full h-fit gap-x-[3rem]">
               {Buttons.map((button) => (
                 <CarouselItem
                   key={button.text}
@@ -90,8 +92,9 @@ const page = () => {
       <div className="flex justify-center items-center py-[2.5rem] mb-[5rem] md:px-[4rem]">
         <PaginationButtons />
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </main>
+    // </UserProvider>
   );
 };
 
