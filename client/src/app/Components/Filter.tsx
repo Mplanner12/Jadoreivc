@@ -1,30 +1,37 @@
 import React, { useState } from "react";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdCheckBox } from "react-icons/md";
 import { ImCheckboxUnchecked } from "react-icons/im";
 import Link from "next/link";
+import { MdKeyboardArrowDown } from "react-icons/md";
 
 interface FilterProps {
   daysOptions: number[];
-  locationOptions: string[];
-  onDaysSelect: (selectedDay: number) => void;
-  onLocalsSelect: (selectedLocal: string) => void;
-  onLocationSelect: (selectedLocation: string) => void;
+  onDaysSelect: (selectedDays: number | null) => void; // Now accepts a single number or null
+  onLocalsSelect: (selectedLocals: string[]) => void;
+  onLocationSelect: (selectedLocation: string | null) => void;
+  selectedDays: number | null | undefined; // Now a single number or null
+  selectedLocals: string[];
+  selectedLocation: string | null;
+  localsOptions: string[];
 }
 
 const Filter: React.FC<FilterProps> = ({
   daysOptions,
-  locationOptions,
   onDaysSelect,
   onLocalsSelect,
   onLocationSelect,
+  selectedDays,
+  selectedLocals,
+  selectedLocation,
 }) => {
   const [daysOpen, setDaysOpen] = useState(false);
   const [localsOpen, setLocalsOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
-  const [selectedLocals, setSelectedLocals] = useState<string[]>([]);
-  const [selectedDays, setSelectedDays] = useState<number | null>(null);
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null); // State for selected location
+  const [onSelectedLocals, setSelectedLocals] = useState<string[]>([]);
+  const [onSelectedDays, setSelectedDays] = useState<number | null>(null);
+  const [onSelectedLocation, setSelectedLocation] = useState<string | null>(
+    null
+  ); // State for selected location
 
   const toggleDropdown = (dropdown: string) => {
     if (dropdown === "days") setDaysOpen(!daysOpen);
@@ -41,23 +48,30 @@ const Filter: React.FC<FilterProps> = ({
   ];
 
   const handleLocalsSelect = (local: string) => {
-    if (selectedLocals.includes(local)) {
+    if (selectedLocals?.includes(local)) {
       setSelectedLocals(selectedLocals.filter((l) => l !== local));
+      onLocalsSelect(selectedLocals.filter((l) => l !== local)); // Pass the filtered array
     } else {
       setSelectedLocals([...selectedLocals, local]);
+      onLocalsSelect([...selectedLocals, local]); // Pass the updated array
     }
-    onLocalsSelect(local);
     // setLocalsOpen(false);
   };
 
   const handleDaysChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);
-    setSelectedDays(isNaN(value) ? null : value); // Update selectedDays state
+    if (isNaN(value)) {
+      setSelectedDays(null); // Set to null if the input is not a number
+      onDaysSelect(null); // Pass null to the parent component
+    } else {
+      setSelectedDays(value); // Update selectedDays state
+      onDaysSelect(value); // Pass the selected day as a single number to the parent component
+    }
   };
 
   const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedLocation(event.target.value); // Update selectedLocation state
-    selectedLocation && onLocationSelect(event.target.value);
+    onLocationSelect(event.target.value); // Pass the selected location to the parent component
   };
 
   return (
@@ -81,7 +95,7 @@ const Filter: React.FC<FilterProps> = ({
               <input
                 type="number"
                 className="w-full text-base p-2 border-2 my-[0.7rem] border-gray-300 rounded"
-                value={selectedDays !== null ? selectedDays.toString() : ""} // Set input value from state
+                value={selectedDays !== null ? selectedDays?.toString() : ""} // Set input value from state
                 onChange={handleDaysChange} // Handle input change
               />
             </div>

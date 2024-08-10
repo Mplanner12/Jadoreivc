@@ -30,7 +30,7 @@ const UserPopUp: React.FC<UserPopUpProps> = ({
   userType,
 }) => {
   return (
-    <div className="absolute z-20 ml-[-4rem] gap-y-[1.5rem] md:ml-[-2rem] flex flex-col items-center p-[2rem] bg-white shadow-lg rounded-lg">
+    <div className="absolute z-20 ml-[-6rem] gap-y-[1.5rem] md:ml-[-2rem] flex flex-col items-center p-[2rem] bg-white shadow-lg rounded-lg">
       <Link
         href={"/profile:id"}
         className="w-full flex justify-center items-center"
@@ -39,7 +39,7 @@ const UserPopUp: React.FC<UserPopUpProps> = ({
           <img
             src={profileImage}
             alt="Profile"
-            className="w-16 h-16 rounded-full mb-4"
+            className="w-19 h-18 md:w-13 md:h-13 rounded-full mb-1"
           />
         ) : (
           <div className="flex justify-center items-center w-fit rounded-full border-[1px] border-emerald-600">
@@ -51,14 +51,14 @@ const UserPopUp: React.FC<UserPopUpProps> = ({
       {user.userType === "TOURIST" ? (
         <button
           onClick={onSwitchToTourGuide}
-          className="w-full py-2 px-4 mb-2 rounded-full text-white bg-orange-400 hover:bg-orange-600"
+          className="w-full py-2 px-4 mb-2 rounded-3xl text-white bg-orange-400 hover:bg-orange-600"
         >
           SWITCH TO TOUR GUIDE
         </button>
       ) : (
         <button
           onClick={onSwitchToTourist}
-          className="w-full py-2 px-4 mb-2 rounded-full text-white bg-orange-400 hover:bg-orange-600"
+          className="w-full py-2 px-4 mb-2 rounded-3xl text-white bg-orange-400 hover:bg-orange-600"
         >
           SWITCH TO TOURIST
         </button>

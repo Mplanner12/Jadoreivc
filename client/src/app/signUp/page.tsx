@@ -12,6 +12,7 @@ const Page = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>("TOURIST"); // For conditional rendering
   const [userType, setUserType] = useState<string | null>("TOURIST"); // For react-hook-form
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
 
   // Register Function
   const registerUser = async (userDetails: any) => {
@@ -21,28 +22,43 @@ const Page = () => {
         userDetails
       );
       if (data.success === true) {
-        setUser(data.user);
-        router.push("/");
+        // setUser(data.user);
+        window.location.href = "/";
       }
-    } catch (error) {
-      alert("Registration failed");
+    } catch (error: any) {
+      // Handle the error response from the server
+      // Check if the error is an Axios error
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        // If it's not an Axios error, handle it differently
+        setErrorMessage("An error occurred. Please try again later.");
+      }
       console.error("Registration failed", error);
     }
   };
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm();
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedValue = event.target.value;
     setSelectedRole(event.target.id);
-    setUserType(event.target.value); // Update the value for react-hook-form
-    register("userType", {
-      required: true,
-      value: userType, // Use roleValue for registration
-    });
+    setUserType(selectedValue); // Set the correct value for react-hook-form
   };
+
+  useEffect(() => {
+    register("userType", { required: true });
+  }, [register]);
+
+  // Use useEffect to update the value for react-hook-form
+  useEffect(() => {
+    setValue("userType", userType);
+    console.log(userType);
+  }, [userType, setValue]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -52,7 +68,6 @@ const Page = () => {
     try {
       console.log(data);
       await registerUser(data);
-      router.push("/");
     } catch (error) {
       console.error("Registration failed", error);
     }
@@ -60,7 +75,10 @@ const Page = () => {
 
   return (
     <div className="bg-emerald-600 w-full h-full flex justify-center md:justify-between">
-      <div className="bg-white w-full h-full flex flex-col justify-center items-center pt-[1.5rem] px-[2.35rem] md:px-[5.85rem] pb-[7rem]">
+      <div
+        id="signUpContainer"
+        className="bg-white w-full h-full flex flex-col justify-center items-center pt-[1.5rem] px-[2.35rem] md:px-[5.85rem] pb-[7rem]"
+      >
         <div className="h-full mb-[1.85rem] md:mb-[3.5rem] w-full flex justify-center items-center">
           <h1 className="w-full h-full text-start text-emerald-600 text-[1.3rem] font-[500]">
             Jadoreivc
@@ -77,7 +95,10 @@ const Page = () => {
             className="w-full bg-none border-0"
           >
             <div className="w-full flex justify-between gap-3 py-[0.75rem] mb-[0.5rem] pr-[1rem] md:pr-0 items-center">
-              <div className="shadow-sm w-fit gap-x-[1rem] flex justify-start items-center py-[1.2rem] px-[1rem] rounded-[0.5rem] border-2 active:border-emerald-600 hover:border-emerald-600 ">
+              <div
+                id="sroleContainer"
+                className="shadow-sm w-fit gap-x-[1rem] flex justify-start items-center py-[1.2rem] px-[1rem] rounded-[0.5rem] border-2 active:border-emerald-600 hover:border-emerald-600 "
+              >
                 <input
                   style={{ transform: "scale(1.5)" }}
                   type="radio"
@@ -90,13 +111,17 @@ const Page = () => {
                   onChange={handleRoleChange}
                 />
                 <label
+                  id="tourist"
                   htmlFor="tourist"
                   className={`w-[5rem] md:w-[12.85rem] text-gray-700 text-[0.75rem] md:text-[0.85rem]`}
                 >
                   As a Tourist
                 </label>
               </div>
-              <div className="shadow-sm w-fit gap-x-[1rem] flex justify-start items-center py-[1.2rem] px-[1rem] rounded-[0.5rem] border-2 active:border-emerald-600 hover:border-emerald-600 ">
+              <div
+                id="roleContainer"
+                className="shadow-sm w-fit gap-x-[1rem] flex justify-start items-center py-[1.2rem] px-[1rem] rounded-[0.5rem] border-2 active:border-emerald-600 hover:border-emerald-600 "
+              >
                 <input
                   style={{ transform: "scale(1.5)" }}
                   type="radio"
@@ -109,8 +134,9 @@ const Page = () => {
                   value="TOUR_GUIDE"
                 />
                 <label
+                  id="tourG"
                   htmlFor="guide"
-                  className={`w-[5.75rem] md:w-[12.85rem] text-gray-700 text-[0.75rem] md:text-[0.85rem]`}
+                  className={`w-[5.25rem] md:w-[12.85rem] text-gray-700 text-[0.75rem] md:text-[0.85rem]`}
                 >
                   As a Tour Guide
                 </label>
@@ -195,6 +221,9 @@ const Page = () => {
                   )}
                 </span>
               </div>
+              {errorMessage && (
+                <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+              )}
               <div className="w-full h-full mt-[1.5rem]">
                 <input
                   disabled={isSubmitting}

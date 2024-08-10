@@ -17,7 +17,7 @@ export default function Home() {
       <main className="m-0 p-0 flex flex-col justify-center">
         {/* <Header /> */}
         <Hero />
-        <FeaturedGuides guideCount={8} />
+        <FeaturedGuides guideCount={5} />
         <RecentBookings />
         <LogoCarousel />
         <LogoCarouselMd />

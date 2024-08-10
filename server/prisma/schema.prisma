@@ -71,7 +71,7 @@ model TourPlan {
 }
 
 model PlanTour {
-  id             String   @id @default(uuid()) @map("_id")
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
   userId         String
   // tourGuideId    String
   location       String

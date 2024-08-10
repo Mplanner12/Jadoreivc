@@ -24,39 +24,40 @@ const Footer = () => {
       <div className="w-full h-full flex flex-col md:flex-row justify-center md:justify-between md:items-center gap-y-[3.25rem] md:gap-y-0">
         <h1 className="text-start text-white text-2xl font-bold">Jadoreivc</h1>
         <div className="w-fit flex justify-center items-center mt-[1rem] gap-x-[1.85rem] pl-[1rem] md:pl-0">
-          <div className="bg-orange-400 rounded-full">
+          {/* Responsive Social Media Icons */}
+          <div className="bg-orange-400 rounded-full relative">
             <FaFacebook
               size={20}
               color="white"
-              className="w-full h-full px-[1rem] py-[0.75rem] rounded-full"
+              className="w-full h-full px-[0.25rem] py-[0.25rem] rounded-full" // Reduced padding for smaller screens
             />
           </div>
-          <div className="bg-orange-400 rounded-full">
+          <div className="bg-orange-400 rounded-full relative">
             <PiInstagramLogo
               size={20}
               color="white"
-              className="w-full h-full  px-[1rem] py-[0.75rem] rounded-full"
+              className="w-full h-full px-[0.25rem] py-[0.25rem] rounded-full" // Reduced padding for smaller screens
             />
           </div>
-          <div className="bg-orange-400 rounded-full">
+          <div className="bg-orange-400 rounded-full relative">
             <IoLogoTiktok
               size={20}
               color="white"
-              className="w-full h-full  px-[1rem] py-[0.75rem] rounded-full"
+              className="w-full h-full px-[0.25rem] py-[0.25rem] rounded-full" // Reduced padding for smaller screens
             />
           </div>
-          <div className="bg-orange-400 rounded-full">
+          <div className="bg-orange-400 rounded-full relative">
             <FaTwitter
               size={20}
               color="white"
-              className="w-full h-full  px-[1rem] py-[0.75rem] rounded-full"
+              className="w-full h-full px-[0.25rem] py-[0.25rem] rounded-full" // Reduced padding for smaller screens
             />
           </div>
-          <div className="bg-orange-400 rounded-full">
+          <div className="bg-orange-400 rounded-full relative">
             <GrLinkedin
               size={20}
               color="white"
-              className="w-full h-full  px-[1rem] py-[0.75rem] rounded-full"
+              className="w-full h-full px-[0.25rem] py-[0.25rem] rounded-full" // Reduced padding for smaller screens
             />
           </div>
         </div>
@@ -81,7 +82,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="md:justify-end w-full flex flex-col justify-start items-start mt-[3rem] md:mt-0 gap-y-[0.85rem] md:gap-y-[1.5rem] ">
+        {/* <div className="md:justify-end w-full flex flex-col justify-start items-start mt-[3rem] md:mt-0 gap-y-[0.85rem] md:gap-y-[1.5rem] ">
           <h1 className="text-white text-lg font-semibold">Download the App</h1>
           <div className="text-sm font-[300] text-white text-start flex flex-col md:flex-row md:gap-x-[2.85rem] gap-y-[0.75rem]">
             <Link href={""}>
@@ -91,7 +92,7 @@ const Footer = () => {
               <Image alt="" src={GStore} width={120} height={160} />
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="w-full pb-[3rem] md:pb-[0.5rem] md:mt-[-2rem] md:relative md:top-[0.8rem] pt-[4.5rem] flex justify-start md:justify-center items-start md:items-center">
         <p className="text-white text-sm font-[300]">

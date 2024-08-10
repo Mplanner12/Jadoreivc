@@ -73,7 +73,7 @@ const RecentBookings = () => {
         </div>
         <button
           id="viewMore"
-          className="md:relative h-fit text-white text-[1.075rem] md:text-sm tracking-wider  font-light bg-orange-400 uppercase rounded-[2rem] -gap-y-3 px-[1rem] md:px-[1.75rem] py-[0.75rem] md:py-[1rem]"
+          className="md:relative h-fit text-white text-[1rem] md:text-sm tracking-wider font-extralight bg-orange-400 uppercase rounded-[2rem] gap-y-1 px-[1rem] md:px-[1.75rem] py-[0.9rem] md:py-[1rem]"
         >
           View More
         </button>
@@ -85,9 +85,9 @@ const RecentBookings = () => {
               key={index}
               className="mt-[1.75rem] md:mb-[2.75rem] flex flex-col justify-center"
             >
-              <div className="absolute -mt-[23.5rem] md:-mt-[24.25rem] ml-[1.25rem] z-20 w-fit p-[0.65rem] px-[1.15rem] bg-white rounded-full text-emerald-600">
+              {/* <div className="absolute -mt-[23.5rem] md:-mt-[23.25rem] ml-[1.25rem] z-20 w-fit p-[0.65rem] px-[1.15rem] bg-white rounded-full text-emerald-600">
                 {booking.price}
-              </div>
+              </div> */}
               <div className="md:w-full mb-[1.5rem]">
                 <div className="">
                   <img

@@ -57,3 +57,62 @@ const UserProvider: React.FC<any> = ({
 };
 
 export { UserContext, UserProvider };
+
+// "use client";
+
+// import axiosInstance from "@/src/lib/utils";
+// import React, {
+//   createContext,
+//   useEffect,
+//   useState,
+//   CSSProperties,
+// } from "react";
+// import ClipLoader from "react-spinners/ClipLoader";
+
+// interface User {
+//   // fullName: string;
+//   // profileImage: string;
+//   // userType: string;
+//   loading: boolean;
+//   user: any;
+//   handleLogin: (userData: User) => void;
+// }
+
+// const UserContext = createContext<User | null>(null);
+
+// const UserProvider: React.FC<any> = ({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }) => {
+//   const [user, setUser] = useState<User | null>(null);
+//   const [loading, setLoading] = useState<boolean>(true);
+
+//   // Function to update the user state on login
+//   const handleLogin = (userData: User) => {
+//     setUser(userData);
+//   };
+
+//   // Function to fetch the current user
+//   useEffect(() => {
+//     const fetchUser = async () => {
+//       try {
+//         const { data } = await axiosInstance.get("/api/users/auth/currentUser");
+//         setUser(data.user);
+//       } catch (error) {
+//         setUser(null);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchUser();
+//   }, []);
+
+//   return (
+//     <UserContext.Provider value={{ user, handleLogin, loading }}>
+//       {children}
+//     </UserContext.Provider>
+//   );
+// };
+
+// export { UserContext, UserProvider };

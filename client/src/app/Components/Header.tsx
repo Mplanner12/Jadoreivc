@@ -10,6 +10,8 @@ import UserPopUp from "./UserPopUp";
 // import { FaRegCircleUser } from "react-icons/fa6";
 import { UserContext } from "../context/UserContex";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import path from "path";
 
 interface HeaderProps {
   fullName: string;
@@ -23,6 +25,7 @@ const override: CSSProperties = {
 
 const Header = () => {
   const { user, loading } = useContext(UserContext);
+  const router = useRouter();
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:5000/api/users",
@@ -47,21 +50,46 @@ const Header = () => {
     setShowPopUp(false);
   };
 
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const handleNavigation = () => {
+    const query: { [key: string]: string } = {};
+    searchParams.forEach((value, key) => {
+      query[key] = value;
+    });
+
+    const url = {
+      pathname,
+      query,
+    };
+    router.push(`${pathname}? ${new URLSearchParams(query).toString()}`);
+    // router.push(pathname, query);
+  };
+
   const logout = async () => {
     try {
       await axiosInstance.get("/auth/logout");
-      // setUser(null);
       console.log("Logout");
+      // setUser(null); // Assuming setUser is your function to update the user state
+      // handleNavigation();
+      router.refresh();
+      window.location.reload();
     } catch (error) {
       console.error("Logout failed", error);
     }
     setShowPopUp(false);
+    router.push("/");
   };
 
   return (
     <div className="w-full flex justify-between py-[1.5rem] md:px-[3.85rem] md:pr-[4.5rem] border-b-[2px]">
-      <div className="w-fit flex justify-start items-center pl-[0.25rem] md:pl-0 lg:pl-[0.25rem]">
-        <Link href={"/"} className="text-emerald-600 font-semibold text-3xl">
+      <div className="w-fit flex justify-start items-center pl-[0.5rem] md:pl-[0rem] relative left-[-0.8rem] lg:pl-[0.25rem]">
+        <Link
+          id="logo"
+          href={"/"}
+          className="text-emerald-600 font-semibold text-3xl"
+        >
           J’adoreivc
         </Link>
       </div>
@@ -73,7 +101,7 @@ const Header = () => {
         </div>
         <div className="justify-center items-center hidden md:flex">
           <Link href={"/customTour"}>
-            <h1 className="font-semibold text-[1.25rem]">Custom Tours</h1>
+            <h1 className="font-semibold text-[1.25rem]">Tours</h1>
           </Link>
         </div>
         <div className="justify-center items-center hidden md:flex">
@@ -99,14 +127,14 @@ const Header = () => {
               onClick={() => setShowPopUp(!showPopUp)}
               className="cursor-pointer mx-auto"
             >
-              <h1 className="font-semibold text-[1.25rem]">
+              <h1 id="userName" className="font-semibold text-[1.25rem]">
                 {user.fullName.split(" ")[0]}
               </h1>
               {showPopUp && (
                 <UserPopUp
                   user={user}
                   fullName={user.fullName}
-                  profileImage={user.profileImage}
+                  profileImage={user.image}
                   onSwitchToTourGuide={handleSwitchToTourGuide}
                   onSwitchToTourist={handleSwitchToTourist}
                   onLogout={logout}
@@ -116,7 +144,9 @@ const Header = () => {
             </div>
           ) : (
             <Link href={"/signUp"}>
-              <h1 className="font-semibold text-[1.25rem]">Sign up</h1>
+              <h1 id="userName" className="font-semibold text-[1.25rem]">
+                Sign up
+              </h1>
             </Link>
           )}
         </div>

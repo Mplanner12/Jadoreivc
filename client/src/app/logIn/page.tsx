@@ -5,12 +5,17 @@ import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/src/lib/utils";
+import { UserContext } from "../context/UserContex";
+import { useContext } from "react";
 
 const Page = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>("TOURIST");
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState(null);
   const [userType, setUserType] = useState<string | null>("TOURIST"); // For react-hook-form
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
+
+  // const currentUser = useContext(UserContext);
 
   const login = async (email: string, password: string, userType: string) => {
     try {
@@ -19,11 +24,16 @@ const Page = () => {
         password,
       });
       if (data.success === true) {
-        setUser((user) => data.user);
-        router.push("/");
+        setUser((user) => user);
+        window.location.href = "/";
       }
-    } catch (error) {
-      alert("Login failed");
+    } catch (error: any) {
+      // Handle the error response from the server
+      if (error?.response && error?.response.data) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("An error occurred. Please try again later.");
+      }
       console.error("Login failed", error);
     }
   };
@@ -59,7 +69,10 @@ const Page = () => {
 
   return (
     <div className="bg-emerald-600 w-full h-full flex justify-center md:justify-between">
-      <div className="bg-white w-full h-full flex flex-col justify-center items-center pt-[2rem] px-[2.35rem] md:px-[5.8rem] pb-[8rem]">
+      <div
+        id="loginContainer"
+        className="bg-white w-full h-full flex flex-col justify-center items-center pt-[2rem] px-[2.35rem] md:px-[5.8rem] pb-[8rem]"
+      >
         <div className="h-full mb-[1.85rem] md:mb-[4.5rem] w-full flex justify-center items-center">
           <h1 className="w-full h-full text-start text-emerald-600 text-[1.3rem] font-[500]">
             Jadoreivc
@@ -76,7 +89,10 @@ const Page = () => {
             className="w-full bg-none border-0"
           >
             <div className="w-full flex justify-between gap-3 py-[0.75rem] mb-[0.5rem] pr-[1rem] md:pr-0 items-center">
-              <div className="shadow-sm w-fit gap-x-[1rem] flex justify-start items-center py-[1.2rem] px-[1rem] rounded-[0.5rem] border-2 active:border-emerald-600 hover:border-emerald-600 ">
+              <div
+                id="roleContainer"
+                className="shadow-sm w-fit gap-x-[1rem] flex justify-start items-center py-[1.2rem] px-[1rem] rounded-[0.5rem] border-2 active:border-emerald-600 hover:border-emerald-600 "
+              >
                 <input
                   style={{ transform: "scale(1.5)" }}
                   type="radio"
@@ -95,7 +111,10 @@ const Page = () => {
                   As a Tourist
                 </label>
               </div>
-              <div className="shadow-sm w-fit gap-x-[1rem] flex justify-start items-center py-[1.2rem] px-[1rem] rounded-[0.5rem] border-2 active:border-emerald-600 hover:border-emerald-600 ">
+              <div
+                id="roleContainer"
+                className="shadow-sm w-fit gap-x-[1rem] flex justify-start items-center py-[1.2rem] px-[1rem] rounded-[0.5rem] border-2 active:border-emerald-600 hover:border-emerald-600 "
+              >
                 <input
                   style={{ transform: "scale(1.5)" }}
                   type="radio"
@@ -141,7 +160,7 @@ const Page = () => {
                   </p>
                 )}
               </div>
-              <div className="w-full h-fit flex flex-col justify-between">
+              <div className="w-full mb-[1.5rem] h-fit flex flex-col justify-between relative">
                 <label
                   className="py-[0.35rem] text-[0.8rem] text-gray-600"
                   htmlFor="password"
@@ -164,19 +183,20 @@ const Page = () => {
                     {`${errors.password.message}`}
                   </p>
                 )}
-                <div className="w-full">
-                  <span
-                    className="relative top-[-1.5rem] flex justify-end w-full h-full right-4 -translate-y-1/2 cursor-pointer"
-                    onClick={togglePasswordVisibility}
-                  >
-                    {showPassword ? (
-                      <LuEye size={32} className="h-6 w-6 text-gray-500" />
-                    ) : (
-                      <LuEyeOff size={32} className="h-6 w-6 text-gray-500" />
-                    )}
-                  </span>
-                </div>
+                <span
+                  className="absolute right-4 top-[70%] -translate-y-1/2 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <LuEye size={32} className="h-6 w-6 text-gray-500" />
+                  ) : (
+                    <LuEyeOff size={32} className="h-6 w-6 text-gray-500" />
+                  )}
+                </span>
               </div>
+              {errorMessage && (
+                <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+              )}
               <div className={`w-full h-full mt-[1.2rem]`}>
                 <input
                   disabled={isSubmitting}

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
 import { CiStar } from "react-icons/ci";
 import Link from "next/link";
@@ -8,132 +8,32 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { TourGuideContext } from "../context/tourGuideContext";
 import { useContext } from "react";
 import { useRouter } from "next/router";
+import GridSkeletonLoader from "./GridSkeleton";
 
 interface FeaturedGuidesProps {
   guideCount: number; // Add a prop to control the number of guides
+  hideViewMore?: boolean;
+  guides?: any;
 }
 
-const FeaturedGuides = ({ guideCount }: FeaturedGuidesProps) => {
-  const GuideInfo = [
-    {
-      image: "/smilingGirl.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide2.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide3.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide4.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide5.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide6.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide7.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide12.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide8.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide9.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide10.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-    {
-      image: "/Guide11.png",
-      name: "Grace Jennings",
-      location: "Abidjan, Cote d Ivoire",
-      rating: "4.5",
-      noofreviews: "(243)",
-      quote: '"Grace made our trip unforgettable!"',
-      languages: ["French", "English"],
-    },
-  ];
-
+const FeaturedGuides = ({
+  guideCount,
+  hideViewMore = false,
+  guides,
+}: FeaturedGuidesProps) => {
   const { tourGuides, loading } = useContext(TourGuideContext);
 
-  const guidesToDisplay = tourGuides?.slice(0, guideCount);
+  function isArray(value: any): value is Array<any> {
+    return Array.isArray(value);
+  }
 
-  if (loading) return <p>Loading...</p>;
+  const guidesToDisplay = isArray(guides)
+    ? guides.slice(0, guideCount)
+    : tourGuides?.slice(0, guideCount);
 
   return (
-    <div className="px-[1rem] py-[2rem] md:px-[4rem] pt-[1rem] md:pt-[2rem] pb-[1rem] w-full flex flex-col justify-center mb-[4rem] md:mb-[4.5rem]">
-      <div className="w-full flex justify-between items-center md:mb[1.5rem]">
+    <div className="px-[1rem] py-[2rem] md:px-[4rem] pt-[1rem] md:pt-[2rem] pb-[1rem] w-full flex flex-col justify-center mb-[2rem] md:mb-[3rem]">
+      <div className="w-full flex justify-between items-center mb-[2.5rem] md:mb[1.5rem]">
         <div className="py-[1.25rem]">
           <h1
             id="mini-header"
@@ -142,86 +42,93 @@ const FeaturedGuides = ({ guideCount }: FeaturedGuidesProps) => {
             Featured Guides
           </h1>
         </div>
-        <Link href="/tourguides">
-          <button
-            id="viewMore"
-            className="md:relative h-fit text-white text-[1rem] md:text-sm tracking-wider font-extralight bg-orange-400 uppercase rounded-[2rem] gap-y-1 px-[1rem] md:px-[1.75rem] py-[0.75rem] md:py-[1rem]"
-          >
-            View More
-          </button>
-        </Link>
-      </div>
-      <div className="block">
-        <div className="md:gap-x-6 md:h-fit w-full h-fit flex flex-col justify-center md:grid md:grid-cols-4 items-center ">
-          {guidesToDisplay?.map((guide: any, index: number) => (
-            <Link
-              // key={guide.image}
-              key={index}
-              href={`/tourguides/tourOverview/${guide.id}`}
+        {!hideViewMore && (
+          <Link href="/tourguides">
+            <button
+              id="viewMore"
+              className="md:relative h-fit text-white text-[1rem] md:text-sm tracking-wider font-extralight bg-orange-400 uppercase rounded-[2rem] gap-y-1 px-[1rem] md:px-[1.75rem] py-[0.9rem] md:py-[1rem]"
             >
-              <div className="mt-[1.75rem] mb-[0.75rem] flex flex-col justify-center h-full">
-                <div className="mb-[0.85rem] w-full h-full">
-                  <img
-                    className="rounded-xl w-full md:h-fit"
-                    src={guide.image}
-                    alt="image"
-                  />
+              View More
+            </button>
+          </Link>
+        )}
+      </div>
+      {loading ? (
+        <GridSkeletonLoader count={8} />
+      ) : (
+        <div className="block">
+          <div className="md:gap-x-6 md:h-fit w-full h-fit flex flex-col justify-center md:grid md:grid-cols-4 items-center ">
+            {guidesToDisplay?.map((guide: any, index: number) => (
+              <Link
+                className="w-full h-full px-[1.25rem] mb-[1.85rem]"
+                // key={guide.image}
+                key={index}
+                href={`/tourguides/tourOverview/${guide.id}`}
+              >
+                <div
+                  style={{ backgroundImage: `url(${guide.user.image})` }}
+                  id="offerRange"
+                  className="w-full bg-cover h-[15rem] p-[0.65rem] px-[1.15rem] bg-white rounded-2xl text-emerald-600 flex justify-end pr-[1.2rem] pt-[0.75rem]"
+                >
+                  <p className="h-fit py-[0.6rem] px-[0.75rem] rounded-full bg-white mt-1">
+                    ${guide.offerRange}
+                  </p>
                 </div>
-                <div className="w-full h-full flex justify-between items-start">
-                  <div className="w-full h-fit pb-[0.5rem] pt-[0.2rem] space-y-[0.25rem] text-teal-950 tracking-wide">
-                    <p className="text-[1rem] font-semibold">{guide.name}</p>
-                    <div className="w-fit gap-x-[0.3rem] text-base font-normal flex justify-between items-center">
-                      <HiOutlineLocationMarker size={17} />{" "}
-                      <p className="text-[0.725rem] tracking-tighter font-[500]">
-                        {guide.location}
+                <div className="w-full mt-[0.35rem]  mb-[0.75rem] flex flex-col justify-center h-full">
+                  <div className="w-full h-full flex flex-col md:justify-start md:gap-y-[0.85rem] justify-between items-start">
+                    <div className="w-full flex justify-between items-center h-fit pb-[0.5rem] gap-y-[0.25rem] text-teal-950 tracking-wide">
+                      <p className="text-[1rem] text-blue-950 font-semibold">
+                        {guide.user.fullName.split(" ")[0]}
                       </p>
+                      <div className="w-fit gap-x-[0.3rem] text-base font-normal flex justify-between items-center">
+                        <HiOutlineLocationMarker
+                          className="text-emerald-900"
+                          size={17}
+                        />{" "}
+                        <p className="text-[0.85rem] text-emerald-900 tracking-tighter font-[500]">
+                          {guide.location}
+                        </p>
+                      </div>
+                      <div className="flex flex-col justify-center items-center gap-y-[0.5rem] py-[0.3rem]">
+                        <div className="w-fit gap-x-[0.5rem] flex justify-center items-center">
+                          <div className="text-[0.85rem] font-semibold text-blue-950">
+                            {guide.rating}
+                          </div>
+                          <div className="flex justify-center w-fit gap-x-[0.10rem] md:gap-x-1">
+                            <FaStar color="orange" size={15} />
+                            {/* <CiStar size={13} /> */}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col justify-center items-center gap-y-[0.5rem] py-[0.3rem]">
-                    <div className="w-fit gap-x-[0.5rem] flex justify-center items-center">
-                      <div className="text-[0.85rem] font-semibold text-blue-950">
-                        {guide.rating}
-                      </div>
-                      <div className="flex justify-center w-fit gap-x-[0.10rem] md:gap-x-1">
-                        <FaStar color="orange" size={15} />
-                        {/* <CiStar size={13} /> */}
-                      </div>
-                      <div className="text-[0.825rem] font-[500] text-blue-950">
+                    <div className="w-full flex justify-between items-center">
+                      <div className="text-[0.8rem] font-[500] text-blue-950">
+                        4 Reviews
                         {guide.noofreviews}
                       </div>
-                    </div>
-                    <div className="flex h-fit py-0.5 text-[0.7rem] justify-center items-center gap-x-[0.25rem]">
-                      <div className="text-teal-950">
-                        {guide.languages != null && guide.languages[0]}
+                      <div className="flex h-fit py-0.5 text-[0.7rem] justify-center items-center gap-x-[0.25rem]">
+                        <div className="text-teal-800">
+                          {guide?.user?.languages != null &&
+                            guide?.user?.languages[0]}
+                        </div>
+                        {guide?.user?.languages != null &&
+                          guide?.user?.languages.length > 1 && (
+                            <div className="text-teal-800 border-l-[1.5px] border-teal-700 pl-[0.25rem]">
+                              {guide.user?.languages[1]}
+                            </div>
+                          )}
                       </div>
-                      {guide.languages != null &&
-                        guide.languages.length > 1 && (
-                          <div className="text-teal-950 border-l-[1.5px] border-teal-700 pl-[0.25rem]">
-                            {guide?.languages[1]}
-                          </div>
-                        )}
                     </div>
                   </div>
+                  <div className="w-fit flex justify-start text-[0.75rem] italic font-[500] text-slate-900">
+                    {guide.quote}
+                  </div>
                 </div>
-                <div className="w-fit flex justify-start text-[0.75rem] italic font-[500] text-slate-900">
-                  {guide.quote}
-                </div>
-                <div className="text-teal-950 md:gap-x-[4rem] md:w-full flex justify-between pt-[1.35rem] md:pt-[1.5rem]">
-                  <p className="w-full text-sm md:text-sm font-[500]">
-                    4 Reviews
-                  </p>
-                  <p className="text-sm md:text-sm font-[500]">
-                    From
-                    <span className="text-sm text-emerald-600 text-[0.8rem] font-[500] px-[0.25rem]">
-                      $189.25
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

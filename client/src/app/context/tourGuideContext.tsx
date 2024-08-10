@@ -9,11 +9,13 @@ const TourGuideContext = createContext<{
   tourGuide: TourGuide | null;
   fetchTourGuideById: (id: string) => void;
   loading: boolean;
+  setTourGuide: any;
 }>({
   tourGuides: undefined,
   tourGuide: null,
   fetchTourGuideById: (id: string) => {},
   loading: true,
+  setTourGuide: () => {},
 });
 
 interface User {
@@ -57,7 +59,7 @@ const TourGuideProvider: React.FC<any> = ({
     try {
       const { data } = await axiosInstance.get("/api/tourGuides/tourGuides");
       setTourGuides(data.tourGuides);
-      console.log(data.tourGuides);
+      // console.log(data.tourGuides);
     } catch (error) {
       console.error("Error fetching tour guides:", error);
     } finally {
@@ -85,7 +87,13 @@ const TourGuideProvider: React.FC<any> = ({
 
   return (
     <TourGuideContext.Provider
-      value={{ tourGuides, tourGuide, fetchTourGuideById, loading }}
+      value={{
+        tourGuides,
+        tourGuide,
+        fetchTourGuideById,
+        loading,
+        setTourGuide,
+      }}
     >
       {children}
     </TourGuideContext.Provider>
