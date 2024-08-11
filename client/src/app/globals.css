@@ -137,3 +137,9 @@ html {
     font-size: 0.9rem;
   }
 }
+
+@media (width<= 339px) {
+  #datetimecont {
+    padding-inline: 0.2rem;
+  }
+}

@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, CSSProperties } from "react";
+import SyncLoader from "react-spinners/SyncLoader";
 import ReviewsCarousel from "../../../Components/ReviewsCarousel";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa6";
@@ -11,7 +12,7 @@ import { MdChevronRight } from "react-icons/md";
 import { TourGuideContext } from "@/src/app/context/tourGuideContext";
 import { useContext } from "react";
 import ClientOnly from "@/src/app/Components/ClientOnly";
-import GridSkeletonLoader from "@/src/app/Components/GridSkeleton";
+import BarLoader from "react-spinners/BarLoader";
 
 // eslint-disable-next-line @next/next/no-async-client-component
 const Page = ({ params }: { params: { id: string } }) => {
@@ -228,11 +229,26 @@ const Page = ({ params }: { params: { id: string } }) => {
       </ClientOnly>
     );
   } else if (showNotFound) {
-    return <div>Tour guide not found</div>;
+    return (
+      <div className="flex flex-col gap-y-[2rem] justify-center items-center h-screen">
+        <BarLoader color="green" speedMultiplier={1} />
+        <p className="flex justify-center font-[500] text-teal-900 items-center text-3xl">
+          Tour guide could not be found, wait a bit or reload the page from the
+          TourGuides
+        </p>
+      </div>
+    );
   } else {
     return (
-      <div>
-        <GridSkeletonLoader />
+      <div className="flex justify-center items-center h-screen">
+        <SyncLoader
+          loading={loading}
+          color="green"
+          size={15}
+          margin={5}
+          speedMultiplier={1}
+        />
+        <div />
       </div>
     );
   }

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
@@ -36,6 +37,8 @@ const Page = () => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [guides, setGuides] = useState<TourGuide[]>([]);
   const [filteredGuidesData, setFilteredGuidesData] = useState<TourGuide[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 3;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +74,22 @@ const Page = () => {
     console.log(filteredGuides());
   }, [guides, selectedFilter]);
 
+  // Calculating the total number of pages
+  const totalPages = Math.ceil(filteredGuidesData.length / pageSize);
+
+  // Function to handle page changes
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  // Get the guides for the current page
+  const currentGuides = filteredGuidesData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <main className="w-full m-0 p-0 flex flex-col justify-center">
       {/* <Header /> */}
@@ -87,9 +106,9 @@ const Page = () => {
         <h1 className="md:pl-[3.5rem] w-full tracking-tighter md:tracking-normal text-[1.75rem] text-center md:text-start md:text-[2.5rem] md:mt-[2.75rem] font-semibold text-teal-950 mb-[3rem]">
           Tour Guides in Côte d’Ivoire
         </h1>
-        <div className="w-full">
+        <div className="w-full pl-[1.25rem]">
           <Carousel className="w-full h-full py-[0rem] md:px-[4rem]">
-            <CarouselContent className="w-full h-fit gap-x-[3rem] md:gap-x-[1rem]">
+            <CarouselContent className="w-full h-fit gap-x-[3.5rem] md:gap-x-[1rem]">
               {Buttons.map((button) => (
                 <CarouselItem
                   key={button}
@@ -118,11 +137,15 @@ const Page = () => {
         <FeaturedGuides
           guideCount={12}
           hideViewMore={true}
-          guides={filteredGuidesData}
+          guides={currentGuides}
         />
       </div>
       <div className="flex justify-center items-center py-[2.5rem] mb-[5rem] md:px-[4rem]">
-        <PaginationButtons />
+        <PaginationButtons
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </main>
   );

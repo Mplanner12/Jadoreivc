@@ -1,15 +1,13 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useRef, useEffect } from "react";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
 import { HiOutlineChevronDown } from "react-icons/hi2";
 import { MdCheckBox } from "react-icons/md";
 import { RiCheckboxBlankLine } from "react-icons/ri";
 import Link from "next/link";
 import DateRangePicker from "../Components/DateRangePicker";
 import TimePicker from "../Components/TimePicker";
-import { UserProvider } from "../context/UserContex";
+import { usePlannedTours } from "../context/tourPlanContext";
 
 interface tourProps {
   onLocalsSelect: (selectedLocal: string) => void;
@@ -17,9 +15,9 @@ interface tourProps {
 }
 
 const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null); // State for selected location
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [peopleOpen, setPeopleOpen] = useState(false);
-  const [selectedPersons, setSelectedPersons] = useState<string | null>(null); // Now a single string
+  const [selectedPersons, setSelectedPersons] = useState<string | null>(null);
   //   const [localsOptions, setLocalsOptions] = useState<string[]>([]);
   const [selectedLocals, setSelectedLocals] = useState<string[]>([]);
 
@@ -31,7 +29,7 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
   };
 
   const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedLocation(event.target.value); // Update selectedLocation state
+    setSelectedLocation(event.target.value);
     // selectedLocation && onLocationSelect(event.target.value);
   };
 
@@ -53,7 +51,7 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
 
   const handlePersonSelect = (person: string) => {
     setSelectedPersons(person); // Directly set the selected person
-    setPeopleOpen(false); // Close the dropdown after selection
+    setPeopleOpen(false);
   };
 
   const handleLocalsSelect = (local: string) => {
@@ -74,7 +72,7 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
       // Check if the click is on the button itself
       !((event.target as HTMLElement)?.closest("button") || false)
     ) {
-      setPeopleOpen(false); // Close the dropdown
+      setPeopleOpen(false);
     }
     if (
       localsDropdownRef.current &&
@@ -82,7 +80,7 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
       // Check if the click is on the button itself
       !((event.target as HTMLElement)?.closest("button") || false)
     ) {
-      setPeopleOpen(false); // Close the dropdown
+      setPeopleOpen(false);
     }
   };
 
@@ -109,7 +107,7 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
       </div>
       <div className="w-full flex flex-col justify-center md:py-[2rem] items-center mb-1 md:mb-[2rem] mt-[2rem] px-[1rem] md:px-[2.5rem]">
         <div className="w-full h-full flex flex-col justify-center items-center py-[1rem] pb-[3.85rem]">
-          <div className="flex justify-center items-center py-[0.75rem]">
+          <div className="flex justify-start md:justify-center items-center py-[0.75rem]">
             <h1 className="text-[2.5rem] text-teal-950 font-semibold">
               Plan your Journey
             </h1>
@@ -140,7 +138,10 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
             />
           </div>
         </div>
-        <div className="w-fit h-full flex flex-col justify-start items-center pb-[1.5rem] px-[2rem] pr-[2rem] md:pr-[2rem] mb-[2rem] md:mb-0 md:pt-[0]">
+        <div
+          id="datetimecont"
+          className="w-fit h-full flex flex-col justify-start items-center px-[1rem] pr-[0.5rem] md:pr-[1rem] mb-[2rem] md:mb-[0.25rem] md:pt-[0]"
+        >
           <div className="w-full pb-[1rem] flex text-start md:text-center px-[0.16rem] text-teal-900 text-[1.1rem] font-[500] justify-start md:justify-center md:ml-[-15.5rem] items-center">
             <h1>Date</h1>
           </div>
@@ -226,7 +227,7 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
               <input
                 type="submit"
                 value="plan new Journey"
-                className="uppercase w-full h-full flex justify-center items-center p-[0.75rem] px-[3.85rem] md:px-[5.85rem] font-[500] text-[1.3rem] text-center bg-orange-400 rounded-full text-white"
+                className="uppercase w-full h-full flex justify-center items-center p-[0.75rem] px-[2.85rem] md:px-[5.85rem] font-[500] text-[1.3rem] text-center bg-orange-400 rounded-full text-white"
               />
             </Link>
           </div>

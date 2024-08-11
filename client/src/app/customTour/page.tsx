@@ -8,11 +8,30 @@ import { MdOutlineMail } from "react-icons/md";
 import Link from "next/link";
 import { PlannedTourContext } from "../context/plannedTourContext";
 
+interface plannedTour {
+  id: string;
+  image: string;
+  location: string;
+  noOfDays: string;
+  startDate: string;
+  endDate: string;
+  numberOfPeople: string;
+  time: string;
+  guidePreference: string;
+  localGuide: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const pageSize = 3;
+
 const Page = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [selectedDays, setSelectedDays] = useState<number | null>(null);
   const [selectedLocals, setSelectedLocals] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [plannedToursData, setPlannedToursData] = useState<plannedTour[]>([]);
 
   const handleDaysSelect = (selectedDays: number | null) => {
     setSelectedDays(selectedDays);
@@ -28,6 +47,29 @@ const Page = () => {
 
   const { plannedTours, loading, fetchPlannedTours } =
     useContext(PlannedTourContext);
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(plannedToursData?.length / pageSize);
+
+  // Function to handle page changes
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  // Get the guides for the current page
+  const currentTours = plannedToursData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  useEffect(() => {
+    if (plannedTours) {
+      setPlannedToursData(plannedTours);
+    }
+    console.log(plannedTours);
+  }, [plannedTours, selectedDays, selectedLocals, selectedLocation]);
 
   return (
     <main className="w-full m-0 p-0 flex flex-col justify-center items-center">
@@ -84,7 +126,7 @@ const Page = () => {
         ) : (
           <div className="w-full flex flex-col md:grid md:grid-cols-2 gap-y-[1.5rem] md:gap-x-[7rem] py-[2rem] px-[1.85rem] md:px-[0.5rem] md:pr-[2rem] justify-center md:justify-start items-center">
             {/* <div className=""></div> */}
-            {plannedTours
+            {currentTours
               ?.filter((tour: any) => {
                 // Filter by days
                 if (selectedDays !== null) {
@@ -194,7 +236,11 @@ const Page = () => {
         )}
       </div>
       <div className="w-full py-[4rem] pb-[6rem] flex justify-center items-center">
-        <PaginationButtons />
+        <PaginationButtons
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </main>
   );

@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("./utils/cookieParser");
 const userRoutes = require("./routes/userRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
-const planRoutes = require("./routes/tourPlanRoutes");
+const tourPlan = require("./routes/tourPlanRoutes");
 const tourGuideRoutes = require("./routes/tourGuideRoutes");
 const planTourRoutes = require("./routes/planTourRoutes");
 
@@ -28,7 +28,7 @@ app.use(cookieParser());
 
 app.use("/api/users", userRoutes);
 app.use("/api/reviews", reviewRoutes);
-app.use("/api/plans", planRoutes);
+app.use("/api/plans", tourPlan);
 app.use("/api/tourGuides", tourGuideRoutes);
 app.use("/api/planTours", planTourRoutes);
 
