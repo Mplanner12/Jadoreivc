@@ -6,7 +6,15 @@ import { BsArrowLeftSquare, BsArrowRightSquare } from "react-icons/bs";
 import { HiOutlineArrowRight } from "react-icons/hi";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 
-const DateRangePicker: React.FC = () => {
+interface DateRangePickerProps {
+  onStartDateChange: (date: Date) => void;
+  onEndDateChange: (date: Date) => void;
+}
+
+const DateRangePicker: React.FC<DateRangePickerProps> = ({
+  onStartDateChange,
+  onEndDateChange,
+}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 

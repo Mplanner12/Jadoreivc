@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
-const TimePicker: React.FC = () => {
+interface TimePickerProps {
+  onTimeChange: (time: string) => void;
+}
+
+const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange }) => {
   const times = [
     "1:00 AM",
     "1:30 AM",

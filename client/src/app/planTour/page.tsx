@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { HiOutlineChevronDown } from "react-icons/hi2";
 import { MdCheckBox } from "react-icons/md";
 import { RiCheckboxBlankLine } from "react-icons/ri";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import DateRangePicker from "../Components/DateRangePicker";
 import TimePicker from "../Components/TimePicker";
 import { usePlannedTours } from "../context/tourPlanContext";
+import { useRouter } from "next/navigation";
 
 interface tourProps {
   onLocalsSelect: (selectedLocal: string) => void;
@@ -20,9 +21,15 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
   const [selectedPersons, setSelectedPersons] = useState<string | null>(null);
   //   const [localsOptions, setLocalsOptions] = useState<string[]>([]);
   const [selectedLocals, setSelectedLocals] = useState<string[]>([]);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const peopleDropdownRef = useRef<HTMLUListElement>(null); // Reference to the dropdown
   const localsDropdownRef = useRef<HTMLUListElement>(null); // Reference to the dropdown
+  const router = useRouter();
+
+  const { createTourPlan } = usePlannedTours();
 
   const toggleDropdown = () => {
     setPeopleOpen((isDropdownOpen) => !isDropdownOpen); // Toggle dropdown state
@@ -92,6 +99,37 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
     };
   }, []);
 
+  const handlePlanTour = async () => {
+    if (
+      !selectedLocation ||
+      !startDate ||
+      !endDate ||
+      !selectedTime ||
+      !selectedPersons
+    ) {
+      alert("Please fill in all the required fields.");
+      return;
+    }
+
+    const tourPlanData = {
+      touristId: "your_tourist_id", // Replace with the actual tourist ID
+      location: selectedLocation,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      time: selectedTime,
+      numberOfPeople: selectedPersons,
+      guidePreference: selectedLocals.join(", "),
+    };
+
+    try {
+      await createTourPlan(tourPlanData);
+      router.push("/customTour"); // Navigate to the custom tour page
+    } catch (error) {
+      console.error("Error planning tour:", error);
+      alert("An error occurred while planning your tour.");
+    }
+  };
+
   return (
     // <UserProvider>
     <main className="m-0 p-0 flex flex-col justify-center items-center">
@@ -146,9 +184,12 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
             <h1>Date</h1>
           </div>
           <div className="w-full md:fit h-full flex flex-col md:flex-row justify-center items-center md:py-[0.5rem] shadow-sm rounded-[0.5rem] border-[0.5px] pt-[0.3rem] md:pt-[0.1rem] md:pb-0 pr-[0.5rem] md:pr-[0.5rem] border-emerald-700 pb-[0.1rem] px-[.5rem] md:px-[0.5rem]">
-            <DateRangePicker />
+            <DateRangePicker
+              onStartDateChange={(date) => setStartDate(date)}
+              onEndDateChange={(date) => setEndDate(date)}
+            />
             <div className="w-full flex md:px-[0.25rem] justify-start items-center">
-              <TimePicker />
+              <TimePicker onTimeChange={(time) => setSelectedTime(time)} />
             </div>
           </div>
         </div>
@@ -223,13 +264,12 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
             </ul>
           </div>
           <div className="w-full md:w-fit h-full mt-[2rem] pb-[4rem] flex justify-center items-center">
-            <Link href={""}>
-              <input
-                type="submit"
-                value="plan new Journey"
-                className="uppercase w-full h-full flex justify-center items-center p-[0.75rem] px-[2.85rem] md:px-[5.85rem] font-[500] text-[1.3rem] text-center bg-orange-400 rounded-full text-white"
-              />
-            </Link>
+            <button
+              onClick={handlePlanTour}
+              className="uppercase w-full h-full flex justify-center items-center p-[0.75rem] px-[2.85rem] md:px-[5.85rem] font-[500] text-[1.3rem] text-center bg-orange-400 rounded-full text-white"
+            >
+              plan new Journey
+            </button>
           </div>
         </div>
       </div>
