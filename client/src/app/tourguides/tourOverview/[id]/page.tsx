@@ -1,20 +1,23 @@
+// eslint-disable-next-line @next/next/no-async-client-component
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useCallback, useEffect, useState, CSSProperties } from "react";
+import React, { useEffect, useState, CSSProperties } from "react";
 import SyncLoader from "react-spinners/SyncLoader";
 import ReviewsCarousel from "../../../Components/ReviewsCarousel";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa6";
-import Header from "../../../Components/Header";
-import Footer from "../../../Components/Footer";
 import { MdChevronRight } from "react-icons/md";
-// import { useRouter } from "next/router";
 import { TourGuideContext } from "@/src/app/context/tourGuideContext";
 import { useContext } from "react";
 import ClientOnly from "@/src/app/Components/ClientOnly";
-import BarLoader from "react-spinners/BarLoader";
+// import BarLoader from "react-spinners/BarLoader";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
-// eslint-disable-next-line @next/next/no-async-client-component
+const override: CSSProperties = {
+  display: "block",
+  margin: "0 auto",
+};
+
 const Page = ({ params }: { params: { id: string } }) => {
   const tourGuideId = params.id; // Access the ID from the URL
   const { fetchTourGuideById, tourGuide, loading, setTourGuide } =
@@ -230,12 +233,20 @@ const Page = ({ params }: { params: { id: string } }) => {
     );
   } else if (showNotFound) {
     return (
-      <div className="flex flex-col gap-y-[2rem] justify-center items-center h-screen">
-        <BarLoader color="green" speedMultiplier={1} />
-        <p className="flex justify-center font-[500] text-teal-900 items-center text-3xl">
-          Tour guide could not be found, wait a bit or reload the page from the
-          TourGuides
-        </p>
+      <div className="w-full flex col justify-center items-center">
+        <div className="flex justify-center items-center">
+          <PacmanLoader
+            cssOverride={override}
+            color="green" // Set your desired loader color
+            loading={loading}
+            size={25} // Adjust size as needed
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+        <div className="text-gray-500 text-center">
+          Something went wrong, please try again...
+        </div>
       </div>
     );
   } else {

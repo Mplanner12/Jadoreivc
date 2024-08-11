@@ -1,82 +1,81 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { HiOutlineChevronDown } from "react-icons/hi2";
 import { MdCheckBox } from "react-icons/md";
 import { RiCheckboxBlankLine } from "react-icons/ri";
-import Link from "next/link";
-import DateRangePicker from "../Components/DateRangePicker";
-import TimePicker from "../Components/TimePicker";
-import { usePlannedTours } from "../context/tourPlanContext";
+import DateRangePicker from "../../Components/DateRangePicker";
+import TimePicker from "../../Components/TimePicker";
+import { usePlannedTours } from "../../context/tourPlanContext";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/src/lib/utils";
 
 interface tourProps {
   onLocalsSelect: (selectedLocal: string) => void;
   onPersonSelect: (selectedPersons: string) => void;
+  params: { id: string };
 }
 
-const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
+const Page = ({ onLocalsSelect, onPersonSelect, params }: tourProps) => {
+  const touristID = params.id; // Access params.id correctly
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [peopleOpen, setPeopleOpen] = useState(false);
-  const [selectedPersons, setSelectedPersons] = useState<string | null>(null);
-  //   const [localsOptions, setLocalsOptions] = useState<string[]>([]);
+  const [selectedPersons, setSelectedPersons] = useState<number>(1);
   const [selectedLocals, setSelectedLocals] = useState<string[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [tourPlans, setTourPlans] = useState<any[]>([]);
 
-  const peopleDropdownRef = useRef<HTMLUListElement>(null); // Reference to the dropdown
-  const localsDropdownRef = useRef<HTMLUListElement>(null); // Reference to the dropdown
+  const peopleDropdownRef = useRef<HTMLUListElement>(null);
+  const localsDropdownRef = useRef<HTMLUListElement>(null);
   const router = useRouter();
 
-  const { createTourPlan } = usePlannedTours();
+  // const { createTourPlan } = usePlannedTours();
 
   const toggleDropdown = () => {
-    setPeopleOpen((isDropdownOpen) => !isDropdownOpen); // Toggle dropdown state
+    setPeopleOpen((isDropdownOpen) => !isDropdownOpen);
   };
 
   const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedLocation(event.target.value);
-    // selectedLocation && onLocationSelect(event.target.value);
+    const location = event.target.value;
+    setSelectedLocation((locationSelected) => location);
   };
 
   const peopleOptions = [
-    "Just me",
-    "2 persons",
-    "3 persons",
-    "4 persons",
-    "5 persons",
-    "more",
+    { text: "Just me", value: 1 },
+    { text: "2 persons", value: 2 },
+    { text: "3 persons", value: 3 },
+    { text: "4 persons", value: 4 },
+    { text: "5 persons", value: 5 },
+    { text: "more", value: 8 },
   ];
-  const localsOptions = [
-    "Man",
-    "Woman",
-    "Couple",
-    "Family",
-    "Couple Of Friends",
-  ];
+  const localsOptions = ["MAN", "WOMAN", "COUPLE", "FAMILY", "FRIENDS"];
 
-  const handlePersonSelect = (person: string) => {
-    setSelectedPersons(person); // Directly set the selected person
+  const handlePersonsChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const Person = parseInt(event.target.value);
+    setSelectedPersons((selectedPerson: number) => Person);
+    console.log("Selected Persons:", Person);
     setPeopleOpen(false);
   };
 
   const handleLocalsSelect = (local: string) => {
-    if (selectedLocals.includes(local)) {
-      setSelectedLocals(selectedLocals.filter((l) => l !== local));
-    } else {
-      setSelectedLocals([...selectedLocals, local]);
-    }
-    // onLocalsSelect(local);
-    // setLocalsOpen(false);
+    setSelectedLocals((prevLocals) => {
+      const updatedLocals = prevLocals.includes(local)
+        ? prevLocals.filter((l) => l !== local)
+        : [...prevLocals, local];
+
+      // Log the updated selected locals
+      console.log("Selected Locals:", updatedLocals);
+
+      return updatedLocals;
+    });
   };
 
-  // Function to handle clicks outside the dropdown
   const handleClickOutside = (event: MouseEvent) => {
     if (
       peopleDropdownRef.current &&
       !peopleDropdownRef.current.contains(event.target as Node) &&
-      // Check if the click is on the button itself
       !((event.target as HTMLElement)?.closest("button") || false)
     ) {
       setPeopleOpen(false);
@@ -84,14 +83,12 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
     if (
       localsDropdownRef.current &&
       !localsDropdownRef.current.contains(event.target as Node) &&
-      // Check if the click is on the button itself
       !((event.target as HTMLElement)?.closest("button") || false)
     ) {
       setPeopleOpen(false);
     }
   };
 
-  // Add event listener for clicks outside the dropdown
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -100,6 +97,11 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
   }, []);
 
   const handlePlanTour = async () => {
+    console.log("selectedLocation:", selectedLocation);
+    console.log("startDate:", startDate);
+    console.log("endDate:", endDate);
+    console.log("selectedTime:", selectedTime);
+    console.log("selectedPersons:", selectedPersons);
     if (
       !selectedLocation ||
       !startDate ||
@@ -112,7 +114,7 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
     }
 
     const tourPlanData = {
-      touristId: "your_tourist_id", // Replace with the actual tourist ID
+      touristId: touristID, // Use touristID here
       location: selectedLocation,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
@@ -122,12 +124,21 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
     };
 
     try {
-      await createTourPlan(tourPlanData);
-      router.push("/customTour"); // Navigate to the custom tour page
+      const { data } = await axiosInstance.post(
+        "/api/plans/tourPlans",
+        tourPlanData
+      );
+      setTourPlans([...tourPlans, data.tourPlan]);
     } catch (error) {
-      console.error("Error planning tour:", error);
-      alert("An error occurred while planning your tour.");
+      console.error("Error creating tour plan:", error);
     }
+    // try {
+    //   await createTourPlan(tourPlanData);
+    //   router.push("/customTour");
+    // } catch (error) {
+    //   console.error("Error planning tour:", error);
+    //   alert("An error occurred while planning your tour.");
+    // }
   };
 
   return (
@@ -185,16 +196,18 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
           </div>
           <div className="w-full md:fit h-full flex flex-col md:flex-row justify-center items-center md:py-[0.5rem] shadow-sm rounded-[0.5rem] border-[0.5px] pt-[0.3rem] md:pt-[0.1rem] md:pb-0 pr-[0.5rem] md:pr-[0.5rem] border-emerald-700 pb-[0.1rem] px-[.5rem] md:px-[0.5rem]">
             <DateRangePicker
-              onStartDateChange={(date) => setStartDate(date)}
-              onEndDateChange={(date) => setEndDate(date)}
+              onStartDateChange={(date) => setStartDate((startDate) => date)} // Passing the current state is unnecessary
+              onEndDateChange={(date) => setEndDate((endDate) => date)}
             />
             <div className="w-full flex md:px-[0.25rem] justify-start items-center">
-              <TimePicker onTimeChange={(time) => setSelectedTime(time)} />
+              <TimePicker
+                onTimeChange={(time) => setSelectedTime((newTime) => time)}
+              />
             </div>
           </div>
         </div>
         <div className="w-full md:w-fit h-full flex flex-col justify-start items-center -mt-[1rem] md:mt-0 py-[0.5rem] pb-[1.25rem]">
-          <div className="w-full px-[2.7rem] md:w-fit flex flex-col justify-start items-center relative">
+          {/* <div className="w-full px-[2.7rem] md:w-fit flex flex-col justify-start items-center relative">
             <label
               htmlFor=""
               className="py-[0rem] w-full text-start text-[1.2rem] font-[500] text-teal-900"
@@ -202,7 +215,7 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
               Number of People
             </label>
             <button
-              className="flex w-full text-[1.225rem] font-[500] text-teal-900 bg-slate-100 border-none justify-between gap-x-[7rem] items-center p-2.5 mt-[0.85rem] px-[1.25rem] rounded md:w-fit"
+              className="flex w-full text-[1.225rem] font-[500] text-teal-900 bg-slate-100 border-none justify-between gap-x-[4rem] items-center p-2.5 mt-[0.85rem] px-[1.25rem] rounded md:w-fit"
               onClick={toggleDropdown}
             >
               {selectedPersons ? selectedPersons : "Just me"}
@@ -211,19 +224,35 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
             {peopleOpen && (
               <ul
                 ref={peopleDropdownRef} // Attach the reference to the dropdown
-                className="relative bg-slate-100 w-full md:w-fit flex flex-col justify-center items-center mt-[0rem] z-20  border-gray-300 rounded shadow-md"
+                className="relative bg-slate-100 w-full md:w-full flex flex-col justify-center items-center mt-[0rem] z-20  border-gray-300 rounded shadow-md"
               >
                 {peopleOptions.map((person) => (
                   <li
                     key={person}
-                    className="w-full p-2 hover:bg-gray-200 cursor-pointer flex justify-center gap-x-[0.45rem] items-center border border-gray-300"
-                    onClick={() => handlePersonSelect(person)}
+                    onClick={() => {
+                      console.log(`Clicked on: ${person}`);
+                      handlePersonsChange(person);
+                    }}
+                    style={{ cursor: "pointer" }}
                   >
                     {person}
                   </li>
                 ))}
               </ul>
             )}
+          </div> */}
+          <div>
+            <select
+              value={selectedPersons}
+              onChange={handlePersonsChange}
+              className="flex w-full text-[1.225rem] font-[500] text-teal-900 bg-slate-100 border-none justify-between items-center p-2.5 mt-[0.85rem] px-[1.25rem] rounded md:w-fit"
+            >
+              {peopleOptions.map((person, index) => (
+                <option key={index} value={person.value}>
+                  {person.text}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="w-full px-[1.9rem] md:w-fit h-full flex flex-col justify-center md:justify-start items-center font-[400] py-[0rem] pb-[1.85rem] mb-[2.5rem] md:mb-0">
@@ -244,16 +273,15 @@ const Page = ({ onLocalsSelect, onPersonSelect }: tourProps) => {
                   className="p-1 hover:bg-gray-200 text-teal-900 text-[1rem] cursor-pointer flex justify-start gap-x-[0.7rem] items-center"
                   onClick={() => handleLocalsSelect(local)}
                 >
-                  {selectedLocals.includes(local) ? ( // Check if local is selected
+                  {selectedLocals.includes(local) ? (
                     <MdCheckBox
                       size={31}
                       className="text-teal-900 mr-2 border-none"
-                    /> // Show blue tick if selected
+                    />
                   ) : (
                     <RiCheckboxBlankLine
                       className="text-teal-950 font-extralight rounded-[3rem] border-[0px]"
                       size={27}
-                      // color="grey"
                     />
                   )}
                   <p className="text-[1.1rem] capitalize text-teal-900 font-[500]">

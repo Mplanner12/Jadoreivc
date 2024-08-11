@@ -2,8 +2,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa6";
-import { CiStar } from "react-icons/ci";
 import PaginationButtons from "../Components/Pagination";
 import { Card, CardContent } from "../../components/ui/card";
 import {
@@ -11,17 +9,13 @@ import {
   CarouselContent,
   CarouselItem,
 } from "../../components/ui/carousel";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
 import FeaturedGuides from "../Components/FeaturedGuides";
-import { UserProvider } from "../context/UserContex";
 import axiosInstance from "@/src/lib/utils";
 
 interface TourGuide {
   name: string;
   thingsToDo: string[];
   tourGuides: [];
-  // Add other properties as needed
 }
 
 const Buttons = [

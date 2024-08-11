@@ -7,11 +7,10 @@ import HamburgerMenu from "./Hamburger";
 import { useContext } from "react";
 import axios from "axios";
 import UserPopUp from "./UserPopUp";
-// import { FaRegCircleUser } from "react-icons/fa6";
 import { UserContext } from "../context/UserContex";
 import ClipLoader from "react-spinners/ClipLoader";
+import HashLoader from "react-spinners/HashLoader";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import path from "path";
 
 interface HeaderProps {
   fullName: string;
@@ -33,8 +32,6 @@ const Header = () => {
   });
 
   const [showPopUp, setShowPopUp] = useState(false);
-  // let [loading, setLoading] = useState(true);
-  let [color, setColor] = useState("#ffffff");
 
   const handleTogglePopUp = () => {
     setShowPopUp((showPopUp) => !showPopUp);
@@ -64,15 +61,12 @@ const Header = () => {
       query,
     };
     router.push(`${pathname}? ${new URLSearchParams(query).toString()}`);
-    // router.push(pathname, query);
   };
 
   const logout = async () => {
     try {
       await axiosInstance.get("/auth/logout");
       console.log("Logout");
-      // setUser(null); // Assuming setUser is your function to update the user state
-      // handleNavigation();
       router.refresh();
       window.location.reload();
     } catch (error) {
@@ -99,11 +93,29 @@ const Header = () => {
             <h1 className="font-semibold text-[1.25rem]">Home</h1>
           </Link>
         </div>
-        <div className="justify-center items-center hidden md:flex">
-          <Link href={"/customTour"}>
-            <h1 className="font-semibold text-[1.25rem]">Tours</h1>
-          </Link>
-        </div>
+        {loading ? (
+          <HashLoader
+            cssOverride={override}
+            color="green" // Set your desired loader color
+            loading={loading}
+            size={25} // Adjust size as needed
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        ) : user ? ( // Check if user exists
+          <>
+            {/* Render the "Tours" link only if the user is a TOUR_GUIDE */}
+            {user.userType === "TOUR_GUIDE" && (
+              <div className="justify-center items-center hidden md:flex">
+                <Link href={`/customTour/${user.id}`}>
+                  <h1 className="font-semibold text-[1.25rem]">Tours</h1>
+                </Link>
+              </div>
+            )}
+          </>
+        ) : (
+          <span>&nbsp;</span>
+        )}
         <div className="justify-center items-center hidden md:flex">
           <Link href={"/profile"}>
             <h1 className="font-semibold text-[1.25rem]">Blog</h1>
@@ -153,17 +165,35 @@ const Header = () => {
         <div className="px-[0.5rem] flex justify-center items-center">
           <HamburgerMenu />
         </div>
-        <div className="w-fit hidden md:flex justify-end items-center px-[1.5rem] ">
-          <Link href="/planTour">
-            <button
-              type="submit"
-              className="w-full flex justify-start items-center gap-x-[0.5rem] uppercase py-[1.3rem] px-[0.85rem] text-center font-light text-[1.rem] text-white rounded-full bg-orange-400 hover:bg-emerald-600 hover:text-white"
-            >
-              <PiPencilLineLight size={30} color="white" className="" />
-              <p className="uppercase">Plan your Tour</p>
-            </button>
-          </Link>
-        </div>
+        {loading ? (
+          <HashLoader
+            cssOverride={override}
+            color="green"
+            loading={loading}
+            size={25}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        ) : user ? (
+          <>
+            {/* "Tours" link is rendered only if the user is a TOUR_GUIDE */}
+            {user.userType === "TOUR_GUIDE" && (
+              <div className="w-fit hidden md:flex justify-end items-center px-[1.5rem] ">
+                <Link href={`/planTour/${user.id}`}>
+                  <button
+                    type="submit"
+                    className="w-full flex justify-start items-center gap-x-[0.5rem] uppercase py-[1.3rem] px-[0.85rem] text-center font-light text-[1.rem] text-white rounded-full bg-orange-400 hover:bg-emerald-600 hover:text-white"
+                  >
+                    <PiPencilLineLight size={30} color="white" className="" />
+                    <p className="uppercase">Plan your Tour</p>
+                  </button>
+                </Link>
+              </div>
+            )}
+          </>
+        ) : (
+          <span>&nbsp;</span>
+        )}
       </div>
     </div>
   );

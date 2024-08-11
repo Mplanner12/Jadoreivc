@@ -50,7 +50,11 @@ exports.getTourPlans = async (req, res) => {
   try {
     const tourPlans = await prisma.tourPlan.findMany({
       include: {
-        tourist: true, // Include tourist details, not tour guide
+        tourist: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
     res.json({ success: true, tourPlans });

@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
 
-const GridSkeletonLoader = ({ count = 9 }) => {
+const GridSkeletonLoader = ({ count = 6 }) => {
   return (
-    <div className="flex flex-col md:grid md:grid-cols-4 gap-4 p-4">
+    <div className="flex flex-col md:grid md:grid-cols-3 gap-4 p-4">
       {/* Loader Items */}
       {Array(count)
         .fill("")

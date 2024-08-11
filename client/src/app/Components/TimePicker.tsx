@@ -55,6 +55,11 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange }) => {
     "12:00 AM",
   ];
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const handleTimeChange = (time: string) => {
+    setSelectedTime(time);
+    console.log("Time Selected:", time); // Log the selected time
+    onTimeChange(time);
+  };
 
   return (
     <div className="md:w-full md:h-fit p-1 md:p-0 pb-0 h-[27rem] max-w-md md:py-3 md:mx-auto -mt-[1rem] md:mt-0">
@@ -68,7 +73,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange }) => {
                 ? " text-teal-600 bg-slate-300 border-emerald-600"
                 : ""
             }`}
-            onClick={() => setSelectedTime(time)}
+            onClick={(e) => handleTimeChange(time)}
           >
             {time}
           </button>

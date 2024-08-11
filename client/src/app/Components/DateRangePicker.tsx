@@ -1,22 +1,31 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../DateRangePicker.css";
-import { BsArrowLeftSquare, BsArrowRightSquare } from "react-icons/bs";
-import { HiOutlineArrowRight } from "react-icons/hi";
-import { HiOutlineArrowLeft } from "react-icons/hi";
+import { HiOutlineArrowRight, HiOutlineArrowLeft } from "react-icons/hi";
 
 interface DateRangePickerProps {
-  onStartDateChange: (date: Date) => void;
-  onEndDateChange: (date: Date) => void;
+  onStartDateChange: (date: Date | null) => void;
+  onEndDateChange: (date: Date | null) => void;
 }
 
 const DateRangePicker: React.FC<DateRangePickerProps> = ({
   onStartDateChange,
   onEndDateChange,
 }) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState<any>(null);
+  const [endDate, setEndDate] = useState<any>(null);
+
+  const handleStartDateChange = (date: Date | null) => {
+    setStartDate(date);
+    onStartDateChange(date);
+    console.log("Start Date Selected:", date); // Log the selected start date
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    setEndDate(date);
+    onEndDateChange(date);
+    console.log("End Date Selected:", date); // Log the selected end date
+  };
 
   return (
     <div className="flex flex-col items-center md:flex-row md:gap-x-4 md:pr-[0.5rem] mb-4 md:mb-0">
@@ -24,17 +33,12 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         <DatePicker
           className="rounded-xl"
           selected={startDate}
-          onChange={(date: any) => setStartDate(date ?? undefined)}
+          onChange={handleStartDateChange}
           selectsStart
           startDate={startDate}
           endDate={endDate}
           inline
-          renderCustomHeader={({
-            monthDate,
-            customHeaderCount,
-            decreaseMonth,
-            increaseMonth,
-          }) => (
+          renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
             <div className="custom-header">
               <HiOutlineArrowLeft
                 size={30}
@@ -58,18 +62,13 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         <DatePicker
           className="end-date"
           selected={endDate}
-          onChange={(date: any) => setEndDate(date ?? undefined)}
+          onChange={handleEndDateChange}
           selectsEnd
           startDate={startDate}
           endDate={endDate}
           minDate={startDate}
           inline
-          renderCustomHeader={({
-            monthDate,
-            customHeaderCount,
-            decreaseMonth,
-            increaseMonth,
-          }) => (
+          renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
             <div className="custom-header">
               <HiOutlineArrowLeft
                 size={30}

@@ -11,6 +11,7 @@ import React, {
 import ClipLoader from "react-spinners/ClipLoader";
 
 interface User {
+  id: string;
   fullName: string;
   profileImage: string;
   userType: string;

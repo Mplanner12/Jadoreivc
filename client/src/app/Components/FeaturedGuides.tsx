@@ -1,20 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties } from "react";
 import { FaStar } from "react-icons/fa6";
-import { CiStar } from "react-icons/ci";
 import Link from "next/link";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { TourGuideContext } from "../context/tourGuideContext";
 import { useContext } from "react";
-import { useRouter } from "next/router";
 import GridSkeletonLoader from "./GridSkeleton";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 interface FeaturedGuidesProps {
-  guideCount: number; // Add a prop to control the number of guides
+  guideCount: number;
   hideViewMore?: boolean;
   guides?: any;
 }
+
+const override: CSSProperties = {
+  display: "block",
+  margin: "0 auto",
+};
 
 const FeaturedGuides = ({
   guideCount,
@@ -29,7 +33,7 @@ const FeaturedGuides = ({
 
   const guidesToDisplay = isArray(guides)
     ? guides.slice(0, guideCount)
-    : tourGuides?.slice(0, guideCount);
+    : tourGuides?.slice(0, guideCount) || [];
 
   return (
     <div className="px-[1rem] py-[2rem] md:px-[4rem] pt-[1rem] md:pt-[2rem] pb-[1rem] w-full flex flex-col justify-center mb-[2rem] md:mb-[3rem]">
@@ -54,8 +58,8 @@ const FeaturedGuides = ({
         )}
       </div>
       {loading ? (
-        <GridSkeletonLoader count={8} />
-      ) : (
+        <GridSkeletonLoader count={6} />
+      ) : guidesToDisplay?.length > 0 ? (
         <div className="block">
           <div className="md:gap-x-6 md:h-fit w-full h-fit flex flex-col justify-center md:grid md:grid-cols-4 items-center ">
             {guidesToDisplay?.map((guide: any, index: number) => (
@@ -126,6 +130,22 @@ const FeaturedGuides = ({
                 </div>
               </Link>
             ))}
+          </div>
+        </div>
+      ) : (
+        <div className="w-full flex col justify-center items-center">
+          <div className="flex justify-center items-center">
+            <PacmanLoader
+              cssOverride={override}
+              color="green" // Set your desired loader color
+              loading={loading}
+              size={25} // Adjust size as needed
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </div>
+          <div className="text-gray-500 text-center">
+            Something went wrong, please try again...
           </div>
         </div>
       )}
