@@ -15,6 +15,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { UserContext } from "../context/UserContex";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Suspense } from "react";
+import LoadingScreen from "../Components/Loader";
 
 interface plannedTour {
   id: string;
@@ -114,7 +115,7 @@ const Page = () => {
   }, [tourPlans, selectedDays, selectedLocals, selectedLocation]);
 
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<LoadingScreen />}>
       <div className="w-full m-0 p-0 flex flex-col justify-center items-center">
         <div className="h-full w-full">
           <img
@@ -202,7 +203,7 @@ const Page = () => {
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
                 return (
-                  <Suspense fallback={null} key={tour.id}>
+                  <Suspense fallback={<LoadingScreen />} key={tour.id}>
                     <Link className="p-0 m-0 w-full h-full" href={"/makeOffer"}>
                       <div className="w-full flex md:w-fit flex-col justify-start items-center py-[1.5rem] md:py-[1.2rem] px-[0.85rem] md:px-[1.25rem] md:pr-[0.7rem] bg-slate-50">
                         <div className="relative w-full gap-x-[1.3rem] md:gap-x-[1rem] flex justify-start items-center py-[0.85rem] pr-[2rem]">

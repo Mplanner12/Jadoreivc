@@ -10,6 +10,7 @@ import { ImCheckboxUnchecked } from "react-icons/im";
 import { FaXmark, FaCheck, FaStar } from "react-icons/fa6";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { UserProvider } from "../../context/UserContex";
+import LoadingScreen from "../../Components/Loader";
 
 const Page = () => {
   const [selectedLocals, setSelectedLocals] = useState<string[]>([]);
@@ -125,7 +126,7 @@ const Page = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingScreen />}>
       <div className="w-full m-0 p-0 flex flex-col justify-center items-center">
         {/* <Header /> */}
         <div className="w-full flex flex-col justify-center items-center pt-[2rem]">

@@ -12,6 +12,7 @@ import { useContext } from "react";
 import ClientOnly from "@/src/app/Components/ClientOnly";
 // import BarLoader from "react-spinners/BarLoader";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import LoadingScreen from "@/src/app/Components/Loader";
 
 const override: CSSProperties = {
   display: "block",
@@ -43,7 +44,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   if (tourGuide) {
     return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingScreen />}>
         <ClientOnly>
           <div className="w-full h-full flex flex-col justify-center">
             {/* <Header /> */}
