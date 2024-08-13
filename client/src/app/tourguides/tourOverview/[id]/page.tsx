@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // eslint-disable-next-line @next/next/no-async-client-component
 /* eslint-disable @next/next/no-img-element */
 "use client";
