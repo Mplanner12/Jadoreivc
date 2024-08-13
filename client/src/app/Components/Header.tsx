@@ -147,8 +147,8 @@ const Header = () => {
                   user={user}
                   fullName={user.fullName}
                   profileImage={user.image}
-                  onSwitchToTourGuide={handleSwitchToTourGuide}
-                  onSwitchToTourist={handleSwitchToTourist}
+                  // onSwitchToTourGuide={handleSwitchToTourGuide}
+                  // onSwitchToTourist={handleSwitchToTourist}
                   onLogout={logout}
                   userType={""}
                 />

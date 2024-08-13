@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "./context/UserContex";
 import { TourGuideProvider } from "./context/tourGuideContext";
-import { PlannedTourProvider } from "./context/plannedTourContext";
+import { PlannedTourProvider } from "./context/tourPlanContext";
 
 const inter = Inter({ subsets: ["latin"] });
 

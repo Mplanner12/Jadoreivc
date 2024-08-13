@@ -1,9 +1,44 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Dive from "./Dive";
 import Search from "./Search";
 
-const Hero = () => {
+import { TourGuideContext } from "../context/tourGuideContext"; // Import the context
+import { useRouter } from "next/navigation";
+
+interface User {
+  id: string;
+  fullName: string;
+  address: string;
+  email: string;
+  password: string;
+  userType: string;
+  languages: string[];
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+}
+interface TourGuide {
+  filter(arg0: (guide: any) => any): unknown;
+  id: string;
+  userId: string;
+  location: string;
+  offerRange: number;
+  aboutMe: string;
+  motto: string;
+  thingsToDo: string[];
+  summary: string;
+  tourHighlights: string[];
+  rating: number | null;
+  user: User;
+  reviews: any[]; // Adjust the type of reviews as needed
+}
+// interface HeroProps {
+//   setLocation: (location: string) => void;
+//   setTourGuideName: (name: string) => void;
+// }
+
+const Hero: React.FC = () => {
   return (
     <div className="flex relative w-full h-full flex-col justify-center">
       <div className=" relative w-full h-full md:h-[32.75rem] bg-cover bg-center">
@@ -30,10 +65,17 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <Search />
-      <Dive />
     </div>
   );
 };
 
 export default Hero;
+
+{
+  /* <Search
+              setLocation={setLocationState}
+              setTourGuideName={setTourGuideNameState}
+              location={location}
+              tourGuideName={tourGuideName}
+            /> */
+}

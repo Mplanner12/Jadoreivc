@@ -14,8 +14,8 @@ interface UserPopUpProps {
   fullName: string;
   profileImage: string;
   userType: string;
-  onSwitchToTourGuide: () => void;
-  onSwitchToTourist: () => void;
+  // onSwitchToTourGuide: () => void;
+  // onSwitchToTourist: () => void;
   onLogout: () => void;
   user: User;
 }
@@ -23,8 +23,8 @@ interface UserPopUpProps {
 const UserPopUp: React.FC<UserPopUpProps> = ({
   fullName,
   profileImage,
-  onSwitchToTourGuide,
-  onSwitchToTourist,
+  // onSwitchToTourGuide,
+  // onSwitchToTourist,
   onLogout,
   user,
   userType,
@@ -39,7 +39,7 @@ const UserPopUp: React.FC<UserPopUpProps> = ({
           <img
             src={profileImage}
             alt="Profile"
-            className="w-19 h-18 md:w-13 md:h-13 rounded-full mb-1"
+            className="w-14 h-14 md:w-11 md:h-11 rounded-full mb-1"
           />
         ) : (
           <div className="flex justify-center items-center w-fit rounded-full border-[1px] border-emerald-600">
@@ -48,7 +48,7 @@ const UserPopUp: React.FC<UserPopUpProps> = ({
         )}
       </Link>
       {/* <p className="font-semibold mb-2">{fullName}</p> */}
-      {user.userType === "TOURIST" ? (
+      {/* {user.userType === "TOURIST" ? (
         <button
           onClick={onSwitchToTourGuide}
           className="w-full py-2 px-4 mb-2 rounded-3xl text-white bg-orange-400 hover:bg-orange-600"
@@ -62,7 +62,7 @@ const UserPopUp: React.FC<UserPopUpProps> = ({
         >
           SWITCH TO TOURIST
         </button>
-      )}
+      )} */}
       <button
         onClick={onLogout}
         className="w-full py-2 text-gray-700 font-semibold rounded-lg hover:bg-gray-300"

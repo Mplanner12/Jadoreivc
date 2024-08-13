@@ -5,32 +5,22 @@ import axios from "axios";
 import axiosInstance from "@/src/lib/utils";
 
 const TourGuideContext = createContext<{
-  tourGuides: TourGuide[] | undefined;
+  tourGuides: TourGuide[];
   tourGuide: TourGuide | null;
   fetchTourGuideById: (id: string) => void;
+  fetchTourGuides: () => void;
   loading: boolean;
   setTourGuide: any;
 }>({
-  tourGuides: undefined,
+  tourGuides: [],
   tourGuide: null,
   fetchTourGuideById: (id: string) => {},
+  fetchTourGuides: () => {},
   loading: true,
   setTourGuide: () => {},
 });
 
-interface User {
-  id: string;
-  fullName: string;
-  address: string;
-  email: string;
-  password: string;
-  userType: string;
-  languages: string[];
-  image: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
+// types.ts or models.ts
 interface TourGuide {
   id: string;
   userId: string;
@@ -44,6 +34,21 @@ interface TourGuide {
   rating: number | null;
   user: User;
   reviews: any[]; // Adjust the type of reviews as needed
+  name: string; // Add the missing 'name' property
+  tourGuideststs: string; // Add the missing 'tourGuideststs' property
+}
+
+interface User {
+  id: string;
+  fullName: string;
+  address: string;
+  email: string;
+  password: string;
+  userType: string;
+  languages: string[];
+  image: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const TourGuideProvider: React.FC<any> = ({
@@ -90,6 +95,7 @@ const TourGuideProvider: React.FC<any> = ({
       value={{
         tourGuides,
         tourGuide,
+        fetchTourGuides,
         fetchTourGuideById,
         loading,
         setTourGuide,

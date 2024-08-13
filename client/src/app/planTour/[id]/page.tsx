@@ -120,7 +120,7 @@ const Page = ({ onLocalsSelect, onPersonSelect, params }: tourProps) => {
       endDate: endDate.toISOString(),
       time: selectedTime,
       numberOfPeople: selectedPersons,
-      guidePreference: selectedLocals.join(", "),
+      guidePreference: selectedLocals,
     };
 
     try {
@@ -129,6 +129,7 @@ const Page = ({ onLocalsSelect, onPersonSelect, params }: tourProps) => {
         tourPlanData
       );
       setTourPlans([...tourPlans, data.tourPlan]);
+      router.push("/customTour");
     } catch (error) {
       console.error("Error creating tour plan:", error);
     }

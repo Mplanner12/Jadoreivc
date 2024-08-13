@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useState, useEffect, useContext } from "react";
 import axiosInstance from "@/src/lib/utils";
 
@@ -5,12 +6,12 @@ const PlannedTourContext = createContext<{
   tourPlans: any[];
   loading: boolean;
   fetchTourPlans: () => void;
-  createTourPlan: (tourPlanData: any) => Promise<void>; // Fixed type definition
+  // createTourPlan: (tourPlanData: any) => Promise<void>; // Fixed type definition
 }>({
   tourPlans: [],
   loading: true,
   fetchTourPlans: () => {},
-  createTourPlan: async () => {}, // Default implementation of createTourPlan
+  // createTourPlan: async () => {}, // Default implementation of createTourPlan
 });
 
 export const PlannedTourProvider = ({
@@ -24,7 +25,7 @@ export const PlannedTourProvider = ({
   const fetchTourPlans = async () => {
     setLoading(true);
     try {
-      const { data } = await axiosInstance.get("/api/planTours/tourPlans");
+      const { data } = await axiosInstance.get("/api/plans/tourPlans");
       setTourPlans(data.tourPlans);
     } catch (error) {
       console.error("Error fetching tour plans:", error);
@@ -33,27 +34,8 @@ export const PlannedTourProvider = ({
     }
   };
 
-  const createTourPlan = async (tourPlanData: any): Promise<void> => {
-    // Ensure this returns Promise<void>
-    try {
-      const { data } = await axiosInstance.post(
-        "/api/planTours/tourPlans",
-        tourPlanData
-      );
-      setTourPlans([...tourPlans, data.tourPlan]);
-    } catch (error) {
-      console.error("Error creating tour plan:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchTourPlans();
-  }, []);
-
   return (
-    <PlannedTourContext.Provider
-      value={{ tourPlans, loading, fetchTourPlans, createTourPlan }}
-    >
+    <PlannedTourContext.Provider value={{ tourPlans, loading, fetchTourPlans }}>
       {children}
     </PlannedTourContext.Provider>
   );

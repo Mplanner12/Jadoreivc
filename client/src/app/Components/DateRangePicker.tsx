@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import moment, { utc } from "moment";
 import { HiOutlineArrowRight, HiOutlineArrowLeft } from "react-icons/hi";
+import "../DateRangePicker.css";
 
 interface DateRangePickerProps {
   onStartDateChange: (date: Date | null) => void;
@@ -12,31 +14,39 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   onStartDateChange,
   onEndDateChange,
 }) => {
-  const [startDate, setStartDate] = useState<any>(null);
-  const [endDate, setEndDate] = useState<any>(null);
-
-  const handleStartDateChange = (date: Date | null) => {
-    setStartDate(date);
-    onStartDateChange(date);
-    console.log("Start Date Selected:", date); // Log the selected start date
-  };
-
-  const handleEndDateChange = (date: Date | null) => {
-    setEndDate(date);
-    onEndDateChange(date);
-    console.log("End Date Selected:", date); // Log the selected end date
-  };
+  const [selectedStart, setSelectedStart] = useState<any>(null);
+  const [selectedEnd, setSelectedEnd] = useState<any>(null);
 
   return (
     <div className="flex flex-col items-center md:flex-row md:gap-x-4 md:pr-[0.5rem] mb-4 md:mb-0">
       <div className="flex justify-center items-center">
         <DatePicker
           className="rounded-xl"
-          selected={startDate}
-          onChange={handleStartDateChange}
+          selected={selectedStart}
+          // onChange={(date) => {
+          //   if (date) {
+          //     const utcStartDate = moment(date).utc().toDate();
+          //     onStartDateChange(utcStartDate);
+          //     setSelectedStart(utcStartDate);
+          //     console.log("Start Date Selected:", utcStartDate);
+          //   } else {
+          //     onStartDateChange(null);
+          //   }
+          // }}
+          onChange={(date) => {
+            if (date) {
+              const adjustedDate = moment(date).add(1, "day").toDate();
+              // .toDate();
+              onStartDateChange(adjustedDate);
+              setSelectedStart(adjustedDate);
+              console.log("Adjusted Start Date:", adjustedDate);
+            } else {
+              onStartDateChange(null);
+            }
+          }}
           selectsStart
-          startDate={startDate}
-          endDate={endDate}
+          startDate={selectedStart}
+          endDate={selectedEnd}
           inline
           renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
             <div className="custom-header">
@@ -61,12 +71,35 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <div className="md:border-l-[1px] border-gray-400 md:pl-[0.7rem] flex justify-center items-center">
         <DatePicker
           className="end-date"
-          selected={endDate}
-          onChange={handleEndDateChange}
+          selected={selectedEnd}
+          // onChange={(date) => {
+          //   if (date) {
+          //     const utcStartDate = moment(date).utc().toDate();
+          //     // const dateString = new Date(date).toLocaleDateString("fr-FR");
+          //     console.log(utcStartDate);
+          //     onEndDateChange(utcStartDate);
+          //     setSelectedEnd(utcStartDate);
+          //     console.log("End Date Selected:", utcStartDate);
+          //   } else {
+          //     onEndDateChange(null);
+          //   }
+          // }}
+          onChange={(date) => {
+            if (date) {
+              const adjustedDate = moment(date)
+                .add(moment(date).utcOffset(), "minutes")
+                .toDate();
+              onEndDateChange(adjustedDate);
+              setSelectedEnd(adjustedDate);
+              console.log("Adjusted End Date:", adjustedDate);
+            } else {
+              onEndDateChange(null);
+            }
+          }}
           selectsEnd
-          startDate={startDate}
-          endDate={endDate}
-          minDate={startDate}
+          startDate={selectedStart}
+          endDate={selectedEnd}
+          minDate={selectedStart}
           inline
           renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
             <div className="custom-header">

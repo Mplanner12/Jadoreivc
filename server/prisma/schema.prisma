@@ -58,16 +58,16 @@ model Review {
 }
 
 model TourPlan {
-  id              String          @id @default(uuid()) @map("_id")
+  id              String            @id @default(uuid()) @map("_id")
   touristId       String
   location        String
   startDate       DateTime
   endDate         DateTime
   time            String
   numberOfPeople  Int
-  guidePreference GuidePreference
-  tourist         User            @relation(fields: [touristId], references: [id])
-  createdAt       DateTime        @default(now())
+  guidePreference GuidePreference[]
+  tourist         User              @relation(fields: [touristId], references: [id])
+  createdAt       DateTime          @default(now())
 }
 
 model PlanTour {
