@@ -11,16 +11,6 @@ import { useRouter } from "next/navigation";
 import axiosInstance from "@/src/lib/utils";
 import LoadingScreen from "../../Components/Loader";
 
-// type paramProps = {
-//   id: string;
-// };
-
-// interface tourProps {
-//   onLocalsSelect: (selectedLocal: string) => void;
-//   onPersonSelect: (selectedPersons: string) => void;
-//   params: paramProps;
-// }
-
 const Page = ({ params }: { params: { id: string } }) => {
   const touristID = params.id; // Access params.id correctly
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
