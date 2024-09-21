@@ -2,16 +2,65 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import axiosInstance from "@/src/lib/utils";
 
+interface User {
+  id: string;
+  fullName: string;
+  address: string;
+  email: string;
+  password: string;
+  userType: string;
+  languages: string[];
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+}
+interface TourGuide {
+  id: string;
+  userId: string;
+  location: string;
+  offerRange: number;
+  aboutMe: string;
+  motto: string;
+  thingsToDo: string[];
+  summary: string;
+  tourHighlights: string[];
+  rating: number | null;
+  user: User;
+  reviews: any[];
+  name: string;
+}
+
+interface TourPlan {
+  id: string;
+  touristId: string;
+  location: string;
+  startDate: Date;
+  endDate: Date;
+  adults: number;
+  children: number;
+  infants: number;
+  pets: number;
+  guidePreference: string;
+  // tourGuide?: TourGuide; // You might need to add this if you use it
+  tourist?: User; // You might need to add this if you use it
+  createdAt: Date;
+  tourGuides: TourGuide[];
+  paymentStatus: "PENDING" | "COMPLETED" | "FAILED";
+  notifications: Notification[];
+}
+
 const PlannedTourContext = createContext<{
   tourPlans: any[];
   plansLoading: boolean;
   fetchTourPlans: () => void;
-  createTourPlan: (tourPlanData: any) => Promise<void>; // Fixed type definition
+  createTourPlan: (tourPlanData: any) => Promise<void>;
+  fetchTourPlanById: (id: string) => Promise<void>;
 }>({
   tourPlans: [],
   plansLoading: true,
   fetchTourPlans: () => {},
-  createTourPlan: async () => {}, // Default implementation of createTourPlan
+  createTourPlan: async () => {},
+  fetchTourPlanById: async () => {},
 });
 
 export const PlannedTourProvider = ({
@@ -34,16 +83,33 @@ export const PlannedTourProvider = ({
     }
   };
 
-  const createTourPlan = async (tourPlanData: any) => {
+  const fetchTourPlanById = async (id: string) => {
+    try {
+      const { data } = await axiosInstance.get(`/api/plans/tourPlans/${id}`);
+      return data.tourPlan;
+    } catch (error) {
+      console.error("Error fetching tour plan:", error);
+    }
+  };
+
+  const createTourPlan = async (tourPlanData: any): Promise<any> => {
     try {
       const { data } = await axiosInstance.post(
         "/api/plans/tourPlans",
         tourPlanData
       );
-      setTourPlans([...tourPlans, data.tourPlan]);
+      return data.tourPlan.id; // Return the created tour plan
+      // setTourPlans([...tourPlans, data.tourPlan]);
     } catch (error) {
       console.error("Error creating tour plan:", error);
     }
+    // try {
+    //   const response = await axiosInstance.post("/api/tourPlans", tourPlanData);
+    //   // ... other logic ...
+    //   return response.data; // Return the created tour plan object
+    // } catch (error) {
+    //   // ... error handling ...
+    // }
   };
 
   useEffect(() => {
@@ -52,7 +118,13 @@ export const PlannedTourProvider = ({
 
   return (
     <PlannedTourContext.Provider
-      value={{ tourPlans, plansLoading, fetchTourPlans, createTourPlan }}
+      value={{
+        tourPlans,
+        plansLoading,
+        fetchTourPlans,
+        fetchTourPlanById,
+        createTourPlan,
+      }}
     >
       {children}
     </PlannedTourContext.Provider>

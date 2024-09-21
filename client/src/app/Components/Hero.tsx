@@ -29,20 +29,26 @@ interface TourGuide {
   user: User;
   reviews: any[]; // Adjust the type of reviews as needed
 }
-// interface HeroProps {
-//   setLocation: (location: string) => void;
-//   setTourGuideName: (name: string) => void;
-// }
 
 const Hero: React.FC = () => {
   return (
     <div className="flex relative w-full h-full flex-col justify-center">
       <div className=" relative w-full h-full md:h-[32.75rem] bg-cover bg-center">
-        <img
+        {/* <img
           className="absolute w-full h-full  md:h-[32.75rem] object-cover mix-blend-overlay"
           src="/image 3.jpg"
           alt=""
-        />
+        /> */}
+        <video
+          // className="absolute top-0 left-0 w-full h-full object-cover"
+          className="absolute w-full h-full  md:h-[32.75rem] object-cover mix-blend-overlay"
+          autoPlay
+          loop
+          muted
+        >
+          <source src="/j'adoreivc.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         <div className="md:h-[32.75rem] realtive top-0 pt-[9rem] md:pt-[10rem] pb-[5rem] md:pb-[5rem] bg-cover bg-gradient-to-r from-green-900 to-orange-800">
           <div className="relative top-[2.75rem] md:top-[4.75rem] flex flex-col justify-center text-center font-bold text-white">
             <motion.div

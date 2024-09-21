@@ -2,8 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
+/* html {
   font-style: inter;
+} */
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+html {
+  font-family: "Roboto", sans-serif; /* Apply Roboto to all elements */
+  font-style: inter;
+}
+
+#Loader svg {
+  overflow: visible;
+  width: 100px;
+  height: 150px;
+}
+
+#Loader svg g {
+  animation: slide 2s linear infinite;
+}
+
+#Loader svg g:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+#Loader svg g:nth-child(2) path {
+  animation-delay: 0.5s;
+  stroke-dasharray: 0px 158px;
+  stroke-dashoffset: 1px;
+}
+
+#Loader svg path {
+  stroke: url(#gradient);
+  stroke-width: 20px;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 0 157px;
+  stroke-dashoffset: 0;
+  animation: escalade 2s cubic-bezier(0.8, 0, 0.2, 1) infinite;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(50px);
+  }
+}
+
+@keyframes escalade {
+  0% {
+    stroke-dasharray: 0 157px;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 157px 157px;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dasharray: 157px 157px;
+    stroke-dashoffset: -156px;
+  }
 }
 
 .text-border {
@@ -67,7 +128,7 @@ html {
   #carouselBtn {
     flex-basis: 25%;
   }
-  #BlogHeader{
+  #BlogHeader {
     height: 20rem;
   }
   #BlogHeadertxt {
@@ -101,6 +162,36 @@ html {
 }
 
 @media (width<= 435px) {
+  #headerParent {
+    position: relative;
+    left: -0.5rem;
+  }
+  #userName {
+    position: relative;
+    left: -0.5rem;
+  }
+  #language {
+    /* position: relative;
+    left: -0.65rem; */
+  }
+  #authparent {
+    position: relative;
+    left: -0.35rem;
+    width: 4.3rem;
+  }
+  #authContainer {
+    width: 4.35rem;
+  }
+  #auth {
+    width: 4.35rem;
+    font-size: 1.1rem;
+  }
+  #authIcon {
+    width: 1rem;
+  }
+  #loginHead {
+    width: 2.9rem;
+  }
   #loginContainer {
     padding: 1.2rem;
   }

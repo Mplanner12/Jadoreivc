@@ -24,7 +24,7 @@ export default function Home() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 2000);
   }, []);
 
   // Updated search function to handle combined search
@@ -82,11 +82,11 @@ export default function Home() {
               </button>
             </div>
             <Dive />
+            <RecentBookings />
             <FeaturedGuides
               guideCount={5}
               tourGuides={filteredGuides} // Pass filtered guides to FeaturedGuides
             />
-            <RecentBookings />
             <LogoCarousel />
             <NewsAndUpdate />
           </div>

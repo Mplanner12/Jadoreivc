@@ -8,8 +8,11 @@ exports.createTourPlan = async (req, res) => {
     location,
     startDate,
     endDate,
-    time,
-    numberOfPeople,
+    // time,
+    adults,
+    children,
+    infants,
+    pets,
     guidePreference,
   } = req.body;
 
@@ -20,8 +23,11 @@ exports.createTourPlan = async (req, res) => {
         location,
         startDate,
         endDate,
-        time,
-        numberOfPeople,
+        // time,
+        adults,
+        children,
+        infants,
+        pets,
         guidePreference,
       },
     });

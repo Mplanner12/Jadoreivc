@@ -7,9 +7,22 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const axiosInstance = axios.create({
-  // baseURL: "http://localhost:5000",
-  baseURL: "https://jadoreivc-backend.vercel.app",
+  baseURL: "/api",
   withCredentials: true,
 });
+
+// const axiosInstance = axios.create({
+//   baseURL: "http://localhost:5000",
+//   // baseURL: "https://jadoreivc-backend.vercel.app",
+//   withCredentials: true,
+// });
+
+export const getUserRole = () => {
+  if (typeof window !== "undefined") {
+    // Check if window is defined
+    return localStorage.getItem("userRole");
+  }
+  return null; // Or return a default value
+};
 
 export default axiosInstance;
