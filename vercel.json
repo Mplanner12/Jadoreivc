@@ -1,11 +1,28 @@
 {
+  "version": 2,
+  "projects": {
+    "frontend": {
+      "src": "client",
+      "outputDirectory": "out"
+    },
+    "backend": {
+      "src": "server",
+      "use": "@vercel/node",
+      "routes": [
+        {
+          "src": "/api/(.*)",
+          "dest": "/index.js"
+        }
+      ]
+    }
+  },
   "builds": [
     {
-      "src": "server/src/index.js",
-      "use": "@vercel/node"
+      "src": "client/package.json",
+      "use": "@vercel/next"
     },
     {
-      "src": "client/**",
+      "src": "server/package.json",
       "use": "@vercel/node"
     }
   ],
@@ -13,13 +30,6 @@
     {
       "src": "/(.*)",
       "dest": "/server/index.js"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/client/$1"
     }
   ]
 }

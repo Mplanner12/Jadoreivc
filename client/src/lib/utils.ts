@@ -6,23 +6,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const axiosInstance = axios.create({
-  baseURL: "/api",
-  withCredentials: true,
-});
-
 // const axiosInstance = axios.create({
 //   baseURL: "http://localhost:5000",
 //   // baseURL: "https://jadoreivc-backend.vercel.app",
 //   withCredentials: true,
 // });
+const axiosInstance = axios.create({
+  baseURL: "/api",
+  withCredentials: true,
+});
 
+export const getUser = () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("token");
+  }
+  return null;
+};
 export const getUserRole = () => {
   if (typeof window !== "undefined") {
-    // Check if window is defined
     return localStorage.getItem("userRole");
   }
-  return null; // Or return a default value
+  return null;
 };
 
 export default axiosInstance;
