@@ -1,16 +1,4 @@
 {
-  "projects": {
-    "frontend": {
-      "root": "client",
-      "buildCommand": "npm run build",
-      "outputDirectory": "out"
-    },
-    "backend": {
-      "root": "server",
-      "buildCommand": "npm run build",
-      "outputDirectory": "dist"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
