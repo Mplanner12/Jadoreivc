@@ -1,21 +1,5 @@
 {
   "version": 2,
-  "projects": {
-    "frontend": {
-      "src": "client",
-      "outputDirectory": "out"
-    },
-    "backend": {
-      "src": "server",
-      "use": "@vercel/node",
-      "routes": [
-        {
-          "src": "/api/(.*)",
-          "dest": "/index.js"
-        }
-      ]
-    }
-  },
   "builds": [
     {
       "src": "client/package.json",
